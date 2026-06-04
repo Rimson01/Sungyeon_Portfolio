@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+:root {
+  --color-bg: #080808;
+  --color-surface: #0e0e0e;
+  --color-text: #ddd8cc;
+  --color-muted: rgba(221, 216, 204, 0.68);
+  --color-dim: rgba(221, 216, 204, 0.36);
+  --color-border: rgba(221, 216, 204, 0.09);
+  --color-accent: #33aaff;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-body: 'Noto Sans KR', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-bg);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
