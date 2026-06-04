@@ -13,9 +13,9 @@ type BadgeValue = 'NEW' | number | null;
 
 interface ViewStatsContextValue {
   counts: Record<string, number>;
-  getViewCount: (item: PortfolioItem) => number;
+  getViewCount: (item: PortfolioItem, mediaId?: string) => number;
   getBadgeValue: (item: PortfolioItem) => BadgeValue;
-  incrementMediaOpen: (item: PortfolioItem) => void;
+  incrementMediaOpen: (item: PortfolioItem, mediaId?: string) => void;
 }
 
 const ViewStatsContext = createContext<ViewStatsContextValue | null>(null);
@@ -54,7 +54,7 @@ export function ViewStatsProvider({ children }: PropsWithChildren) {
   const [counts, setCounts] = useState<Record<string, number>>(mockImageViewCounts);
 
   const getViewCount = useCallback(
-    (item: PortfolioItem) => counts[getPrimaryMediaId(item)] ?? 0,
+    (item: PortfolioItem, mediaId?: string) => counts[mediaId ?? getPrimaryMediaId(item)] ?? 0,
     [counts],
   );
 
@@ -68,8 +68,8 @@ export function ViewStatsProvider({ children }: PropsWithChildren) {
     [counts],
   );
 
-  const incrementMediaOpen = useCallback((item: PortfolioItem) => {
-    const mediaId = getPrimaryMediaId(item);
+  const incrementMediaOpen = useCallback((item: PortfolioItem, selectedMediaId?: string) => {
+    const mediaId = selectedMediaId ?? getPrimaryMediaId(item);
     const viewedIds = getViewedMediaIds();
 
     if (viewedIds.has(mediaId)) return;

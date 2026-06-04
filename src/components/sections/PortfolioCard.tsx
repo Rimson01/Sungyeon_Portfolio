@@ -15,6 +15,13 @@ export default function PortfolioCard({ item, onSelect }: PortfolioCardProps) {
     <button type="button" className={styles.card} onClick={() => onSelect(item)}>
       {badgeValue ? <span className={styles.badge}>{badgeValue}</span> : null}
       <div className={styles.media} aria-hidden="true">
+        <img
+          src={item.thumbnailUrl}
+          alt=""
+          onError={(event) => {
+            event.currentTarget.style.display = 'none';
+          }}
+        />
         <span>{item.mediaType}</span>
       </div>
       <div className={styles.overlay}>

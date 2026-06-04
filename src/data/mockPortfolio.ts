@@ -1,4 +1,53 @@
 import type { Company, PortfolioItem } from '../features/portfolio/portfolio.types';
+import { importedWixMilitaryRadio } from './importedWixMilitaryRadio';
+
+const militaryRadioMedia = [
+  ...(importedWixMilitaryRadio.video
+    ? [
+        {
+          id: 'military-radio-youtube',
+          type: 'youtube' as const,
+          youtubeId: importedWixMilitaryRadio.video.id,
+          thumbnailUrl:
+            importedWixMilitaryRadio.video.posterUrl ??
+            `https://img.youtube.com/vi/${importedWixMilitaryRadio.video.id}/hqdefault.jpg`,
+          title: `${importedWixMilitaryRadio.title} video`,
+          alt: `${importedWixMilitaryRadio.title} video`,
+          order: 1,
+          isCountable: true,
+          lightboxEnabled: true,
+        },
+      ]
+    : []),
+  ...importedWixMilitaryRadio.images.slice(1).map((image, index) => ({
+    id: image.id,
+    type: 'image' as const,
+    url: image.highResolutionUrl,
+    thumbnailUrl: image.highResolutionUrl,
+    title: `${importedWixMilitaryRadio.title} ${String(index + 1).padStart(2, '0')}`,
+    alt: importedWixMilitaryRadio.title,
+    displayLabel: [
+      'Day Render',
+      'Night Render',
+      'Detail Render 01',
+      'Detail Render 02',
+      'Detail Render 03',
+      'Detail Render 04',
+      'Detail Render 05',
+      'Detail Render 06',
+      'Detail Render 07',
+      'Detail Render 08',
+      'Extra Props 01',
+      'Extra Props 02',
+      'Extra Props 03',
+      'Texture',
+      'Work Process',
+    ][index],
+    order: index + 2,
+    isCountable: true,
+    lightboxEnabled: true,
+  })),
+];
 
 export const mockCompanies: Company[] = [
   {
@@ -107,6 +156,45 @@ export const mockPortfolioItems: PortfolioItem[] = [
     media: [],
   },
   {
+    id: 'personal-military-radio',
+    title: importedWixMilitaryRadio.title,
+    subtitle: 'Personal Work',
+    slug: 'military-radio',
+    category: 'PERSONAL',
+    section: 'personalWorks',
+    projectType: 'Props',
+    descriptionHtml: `실제 군용 무전기를 기반으로 제작한 개인 작업입니다.
+모델링부터 텍스처링, 라이팅까지 전 과정을 직접 진행했습니다.
+
+제작 기간 : ${importedWixMilitaryRadio.period}`,
+    tools: [...importedWixMilitaryRadio.tools],
+    role: 'Full Pipeline',
+    year: 2026,
+    publishedAt: '2026-01-31',
+    uploadedAt: '2026-01-31',
+    isPublished: true,
+    isFeatured: true,
+    thumbnailUrl: importedWixMilitaryRadio.images[0].highResolutionUrl,
+    hoverUrl: importedWixMilitaryRadio.images[1]?.highResolutionUrl,
+    youtubeId: importedWixMilitaryRadio.video?.id,
+    mediaType: 'image',
+    order: 2,
+    allOrder: 4,
+    categoryOrder: 2,
+    lightboxGroupId: 'PERSONAL',
+    chips: [
+      { label: 'Props', highlighted: true },
+      { label: 'UE5', highlighted: true },
+      { label: 'Substance Painter', highlighted: false },
+    ],
+    stats: [
+      { key: 'Period', value: importedWixMilitaryRadio.period },
+      { key: 'Tools', value: importedWixMilitaryRadio.tools.join(' / ') },
+      { key: 'Source', value: 'Wix import draft' },
+    ],
+    media: militaryRadioMedia,
+  },
+  {
     id: 'sketch-note-youtube',
     title: 'Sketch Note Film',
     subtitle: 'Sketch Note',
@@ -126,7 +214,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
     youtubeId: 'example',
     mediaType: 'youtube',
     order: 1,
-    allOrder: 4,
+    allOrder: 5,
     categoryOrder: 1,
     lightboxGroupId: 'SKETCH',
     chips: [],
@@ -152,7 +240,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
     thumbnailUrl: '/mock/designer-layout-thumb.webp',
     mediaType: 'image',
     order: 1,
-    allOrder: 5,
+    allOrder: 6,
     categoryOrder: 1,
     lightboxGroupId: 'DESIGNER',
     chips: [],
@@ -178,7 +266,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
     thumbnailUrl: '/mock/relight-corridor-thumb.webp',
     mediaType: 'image',
     order: 1,
-    allOrder: 6,
+    allOrder: 7,
     categoryOrder: 1,
     lightboxGroupId: 'RELIGHT',
     chips: [],

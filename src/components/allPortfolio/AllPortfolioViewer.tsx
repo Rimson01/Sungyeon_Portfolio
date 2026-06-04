@@ -83,12 +83,19 @@ interface MediaPanelProps {
 }
 
 function MediaPanel({ item }: MediaPanelProps) {
-  if (item.mediaType === 'youtube' && item.youtubeId) {
+  const primaryMedia = item.media.find((media) => media.type === 'image') ?? item.media[0];
+  const mediaType = primaryMedia?.type ?? item.mediaType;
+  const youtubeId = primaryMedia?.youtubeId ?? item.youtubeId;
+  const mediaTitle = primaryMedia?.title ?? item.title;
+  const imageUrl = primaryMedia?.url ?? primaryMedia?.thumbnailUrl ?? item.thumbnailUrl;
+  const thumbnailUrl = primaryMedia?.thumbnailUrl ?? imageUrl;
+
+  if (mediaType === 'youtube' && youtubeId) {
     return (
       <div className={styles.youtubePanel}>
         <iframe
-          title={`${item.title} video preview`}
-          src={`https://www.youtube.com/embed/${item.youtubeId}?autoplay=0&controls=1&modestbranding=1&rel=0`}
+          title={`${mediaTitle} video preview`}
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=0&controls=1&modestbranding=1&rel=0`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
         />
@@ -98,9 +105,12 @@ function MediaPanel({ item }: MediaPanelProps) {
 
   return (
     <div className={styles.mediaPanel}>
-      <span>{item.mediaType}</span>
-      <strong>{item.title}</strong>
-      <small>{item.thumbnailUrl}</small>
+      <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
+      <div className={styles.mediaCaption}>
+        <span>{mediaType}</span>
+        <strong>{mediaTitle}</strong>
+        <small>{thumbnailUrl}</small>
+      </div>
     </div>
   );
 }
