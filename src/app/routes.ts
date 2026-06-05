@@ -1,7 +1,7 @@
 export const routes = [
-  { path: '/', label: 'About' },
+  { path: '/about', label: 'About' },
   { path: '/personal-works', label: 'Personal Works' },
-  { path: '/all-portfolio', label: 'ALL Portfolio' },
+  { path: '/', label: 'ALL Portfolio' },
 ] as const;
 
 export type AppRoute = (typeof routes)[number];

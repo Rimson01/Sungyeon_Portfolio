@@ -17,7 +17,8 @@ export default function App() {
       <CategoryLightboxProvider>
         <AppShell>
           <Routes>
-            <Route path="/" element={<AboutPage />} />
+            <Route path="/" element={<AllPortfolioPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/professional" element={<ProfessionalPage />} />
             <Route path="/personal-works" element={<PersonalWorksPage />} />
             <Route path="/sketch" element={<SketchPage />} />

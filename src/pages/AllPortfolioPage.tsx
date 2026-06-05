@@ -72,7 +72,11 @@ export default function AllPortfolioPage() {
         <AllPortfolioGrid items={items} />
       </section>
 
-      <section className={styles.statementSection} aria-label="Environment artist statement">
+      <section
+        id="contact"
+        className={styles.statementSection}
+        aria-label="Environment artist statement"
+      >
         <span>About</span>
         <div className={styles.statementCopy}>
           <p>
@@ -85,7 +89,7 @@ export default function AllPortfolioPage() {
             <br />
             플레이어가 자연스럽게 세계관에 몰입할 수 있는 공간을 제작합니다.
           </p>
-          <Link to="/" className={styles.aboutButton}>
+          <Link to="/about" className={styles.aboutButton}>
             Profile
           </Link>
         </div>

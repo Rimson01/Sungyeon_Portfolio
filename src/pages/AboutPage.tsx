@@ -159,7 +159,7 @@ function PortfolioLinks() {
           <span>View Works</span>
           <h3>Personal Works</h3>
         </Link>
-        <Link to="/all-portfolio" className={styles.portfolioTile}>
+        <Link to="/" className={styles.portfolioTile}>
           <span>View Archive</span>
           <h3>ALL Portfolio</h3>
         </Link>
