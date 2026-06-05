@@ -168,9 +168,13 @@
 
 @media (max-width: 960px) {
   .environmentRow,
-  .studyFeatureRow,
-  .materialRow {
+  .studyFeatureRow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: clamp(280px, 38vw, 380px);
+  }
+
+  .materialRow {
+    grid-template-columns: minmax(0, 0.72fr);
     height: clamp(280px, 38vw, 380px);
   }
 

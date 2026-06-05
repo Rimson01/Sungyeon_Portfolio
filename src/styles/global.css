@@ -19,6 +19,7 @@
 
 html {
   background: var(--color-bg);
+  overflow-x: clip;
 }
 
 body {
@@ -26,6 +27,7 @@ body {
   font-family: var(--font-body);
   background: var(--color-bg);
   color: var(--color-text);
+  overflow-x: clip;
 }
 
 button,

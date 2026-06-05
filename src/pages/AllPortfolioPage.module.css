@@ -2,8 +2,10 @@
   display: grid;
   gap: 18px;
   width: 100vw;
+  max-width: 100vw;
   margin-left: calc(50% - 50vw);
   padding-bottom: 48px;
+  overflow-x: clip;
 }
 
 .hero {
@@ -246,6 +248,7 @@
   font-family: var(--font-mono);
   font-size: clamp(12px, 1vw, 15px);
   letter-spacing: 0.12em;
+  overflow-wrap: anywhere;
   text-decoration: none;
   text-transform: uppercase;
   transition: color 160ms ease;
@@ -339,6 +342,10 @@
     text-align: left;
   }
 
+  .statementBranding h2 {
+    font-size: clamp(58px, 13vw, 110px);
+  }
+
   .worksCopy {
     text-align: left;
   }
@@ -356,8 +363,13 @@
   }
 
   .statementSection {
+    gap: 28px;
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .statementBranding h2 {
+    font-size: clamp(52px, 17vw, 76px);
   }
 
   .hero {
