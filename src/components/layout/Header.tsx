@@ -5,7 +5,7 @@ import styles from './Header.module.css';
 export default function Header() {
   return (
     <header className={styles.header}>
-      <NavLink to="/" className={styles.brand}>
+      <NavLink to="/all-portfolio" className={styles.brand}>
         Sungyeon Lee
       </NavLink>
       <nav className={styles.nav} aria-label="Main navigation">

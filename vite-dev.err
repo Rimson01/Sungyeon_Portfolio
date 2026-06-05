@@ -1,0 +1,37 @@
+C:\Users\Sungyeon\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin : 'C:\Users\Sungyeon\.cache\codex-r
+untimes\codex-primary-runtime\dependencies\node\bin' 용어가 cmdlet, 함수, 스크립트 파일 또는 실행할 수 있는 프로그램 이
+름으로 인식되지 않습니다. 이름이 정확한지 확인하고 경로가 포함된 경우 경로가 올바른지 검증한 다음 다시 시도하십시오.
+위치 줄:1 문자:11
++ $env:PATH=C:\Users\Sungyeon\.cache\codex-runtimes\codex-primary-runti ...
++           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\Sungye...encies\node\bin:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+값 "C:\Users\Sungyeon\.codex\tmp\arg0\codex-arg0MVPtwQ;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Raz
+er Chroma SDK\bin;C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64_win\compiler;C:\Windows\sys
+tem32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\P
+rogram Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\S
+ystem32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Bandizip\;C:\Program Files\dotnet\;C:\WIN
+DOWS\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Razer\ChromaBroadcast\bin
+;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Users\Sungyeon\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\system32;C
+:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program 
+Files\NVIDIA Corporation\NVIDIA App\NvDLISR;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Comm
+on Files\Autodesk Shared\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Users\Sungyeon\AppData\Local\SOOP;C:\Use
+rs\Sungyeon\AppData\Local\GitHubDesktop\bin;C:\Users\Sungyeon\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Sun
+gyeon\AppData\Roaming\npm;C:\Program Files\WindowsApps\OpenAI.Codex_26.601.2237.0_x64__2p2nqsd0c76g0\app\resources"을(
+를) "System.Int32" 유형으로 변환할 수 없습니다. 오류: "입력 문자열의 형식이 잘못되었습니다."
+위치 줄:1 문자:96
++ ... imes\codex-primary-runtime\dependencies\node\bin; + $env:PATH; $env:p ...
++                                                       ~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvalidCastFromStringToInteger
+ 
+false : 'false' 용어가 cmdlet, 함수, 스크립트 파일 또는 실행할 수 있는 프로그램 이름으로 인식되지 않습니다. 이름이 정확
+한지 확인하고 경로가 포함된 경우 경로가 올바른지 검증한 다음 다시 시도하십시오.
+위치 줄:1 문자:149
++ ... n; + $env:PATH; $env:pnpm_config_verify_deps_before_run=false; & C:\U ...
++                                                             ~~~~~
+    + CategoryInfo          : ObjectNotFound: (false:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+$ vite "--" "--host" "127.0.0.1" "--port" "5173"

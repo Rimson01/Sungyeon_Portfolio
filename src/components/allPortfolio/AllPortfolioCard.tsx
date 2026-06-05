@@ -1,23 +1,24 @@
 import type { PortfolioItem } from '../../features/portfolio/portfolio.types';
-import { useViewStats } from '../../features/viewStats/viewStats';
 import styles from './AllPortfolioCard.module.css';
 
 interface AllPortfolioCardProps {
   item: PortfolioItem;
   onSelect: (item: PortfolioItem) => void;
+  className?: string;
 }
 
-export default function AllPortfolioCard({ item, onSelect }: AllPortfolioCardProps) {
-  const { getBadgeValue } = useViewStats();
-  const badgeValue = getBadgeValue(item);
-
+export default function AllPortfolioCard({ item, onSelect, className }: AllPortfolioCardProps) {
   return (
-    <button type="button" className={styles.card} onClick={() => onSelect(item)}>
-      {badgeValue ? <span className={styles.badge}>{badgeValue}</span> : null}
+    <button
+      type="button"
+      className={className ? `${styles.card} ${className}` : styles.card}
+      onClick={() => onSelect(item)}
+    >
       <div className={styles.media} aria-hidden="true">
         <img
           src={item.thumbnailUrl}
           alt=""
+          className={styles[getImageClassName(item.id)]}
           onError={(event) => {
             event.currentTarget.style.display = 'none';
           }}
@@ -31,4 +32,14 @@ export default function AllPortfolioCard({ item, onSelect }: AllPortfolioCardPro
       </div>
     </button>
   );
+}
+
+function getImageClassName(itemId: string) {
+  if (itemId === 'personal-military-radio') return 'militaryRadioImage';
+  if (itemId === 'personal-fire-place') return 'firePlaceImage';
+  if (itemId === 'personal-sci-fi-corridor') return 'sciFiCorridorImage';
+  if (itemId === 'personal-zbrush-rock-environment-practice') return 'rockSceneImage';
+  if (itemId === 'personal-zbrush-study') return 'zbrushStudyImage';
+  if (itemId === 'personal-material-study') return 'materialStudyImage';
+  return 'defaultImage';
 }

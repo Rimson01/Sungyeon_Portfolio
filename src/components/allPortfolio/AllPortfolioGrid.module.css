@@ -1,16 +1,243 @@
-.grid {
+.archive {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 14px;
+  gap: 42px;
 }
 
-.sentinel {
+.section {
   display: grid;
-  min-height: 72px;
-  place-items: center;
-  color: var(--color-dim);
+  gap: 4px;
+}
+
+.section + .section {
+  border-top: 1px solid rgba(51, 170, 255, 0.18);
+  padding-top: clamp(48px, 7vw, 108px);
+}
+
+.schoolSection {
+  gap: clamp(18px, 2vw, 28px);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 0 clamp(18px, 3vw, 42px);
+  min-height: 18px;
+}
+
+.sectionHeader h2,
+.sectionHeader small {
+  margin: 0;
+  color: var(--color-accent);
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.16em;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+}
+
+.sectionHeader small {
+  color: var(--color-dim);
+}
+
+.sectionHeader p {
+  max-width: 420px;
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.schoolHeader {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr) minmax(220px, 340px);
+  align-items: end;
+  gap: clamp(18px, 3vw, 44px);
+  padding: 0 clamp(18px, 3vw, 42px);
+}
+
+.schoolTitleBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.schoolTitleBlock span,
+.schoolMeta strong {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.schoolTitleBlock h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(56px, 8.5vw, 128px);
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.schoolTitleBlock h2 strong {
+  color: var(--color-accent);
+  font-weight: inherit;
+}
+
+.schoolRule {
+  height: 1px;
+  margin-bottom: clamp(14px, 2.2vw, 30px);
+  background: linear-gradient(90deg, rgba(51, 170, 255, 0.58), rgba(51, 170, 255, 0.08));
+}
+
+.schoolMeta {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+  padding-bottom: clamp(3px, 0.8vw, 12px);
+  text-align: right;
+}
+
+.schoolMeta p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.environmentStudy,
+.character {
+  display: grid;
+  gap: 4px;
+}
+
+.environmentStudy {
+  padding: 0 clamp(18px, 3vw, 42px);
+}
+
+.archiveRow {
+  display: grid;
+  gap: 4px;
+}
+
+.environmentRow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  height: clamp(330px, 23vw, 410px);
+}
+
+.studyFeatureRow {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  height: clamp(330px, 23vw, 410px);
+}
+
+.materialRow {
+  grid-template-columns: minmax(0, 0.62fr);
+  justify-content: center;
+  height: clamp(300px, 21vw, 360px);
+}
+
+.character {
+  grid-template-columns: minmax(280px, 0.9fr) repeat(2, minmax(220px, 0.7fr));
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1440px;
+  width: 100%;
+  min-height: clamp(430px, 38vw, 580px);
+  margin: 0 auto;
+  padding: 0 clamp(18px, 3vw, 42px);
+}
+
+.schoolFeatureCard,
+.schoolSupportCard {
+  aspect-ratio: 4 / 5;
+  max-height: 620px;
+}
+
+.schoolFeatureCard {
+  max-height: 680px;
+}
+
+.schoolSupportCard {
+  align-self: center;
+  max-height: 560px;
+}
+
+@media (max-width: 960px) {
+  .environmentRow,
+  .studyFeatureRow,
+  .materialRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    height: clamp(280px, 38vw, 380px);
+  }
+
+  .environmentRow > :first-child {
+    grid-column: span 2;
+  }
+
+  .character {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 0;
+  }
+
+  .schoolHeader {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .schoolRule {
+    width: 100%;
+    margin: 0;
+  }
+
+  .schoolMeta {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .schoolFeatureCard {
+    grid-column: span 2;
+    max-height: none;
+  }
+
+  .schoolSupportCard {
+    max-height: none;
+  }
+}
+
+@media (max-width: 680px) {
+  .archive {
+    gap: 40px;
+  }
+
+  .sectionHeader,
+  .schoolHeader,
+  .environmentStudy,
+  .character {
+    padding: 0 10px;
+  }
+
+  .environmentStudy,
+  .character {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+
+  .archiveRow {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .archiveRow > * {
+    aspect-ratio: 4 / 3;
+  }
+
+  .schoolFeatureCard,
+  .schoolSupportCard {
+    aspect-ratio: 4 / 5;
+    grid-column: span 1;
+  }
 }
