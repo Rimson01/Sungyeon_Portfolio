@@ -12,6 +12,8 @@ export type PortfolioSection =
   | 'designer'
   | 'relighting';
 
+export type PersonalPortfolioSubcategory = 'Environment' | 'Character' | 'Study';
+
 export type MediaType = 'image' | 'video' | 'youtube';
 
 export interface PortfolioChip {
@@ -30,6 +32,7 @@ export interface PortfolioMedia {
   url?: string;
   thumbnailUrl?: string;
   youtubeId?: string;
+  youtubeStartSeconds?: number;
   title: string;
   alt: string;
   order: number;
@@ -43,6 +46,7 @@ export interface PortfolioItem {
   subtitle?: string;
   slug: string;
   category: PortfolioCategory;
+  personalSubcategory?: PersonalPortfolioSubcategory;
   section: PortfolioSection;
   companyId?: string;
   projectType: string;

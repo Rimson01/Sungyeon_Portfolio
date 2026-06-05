@@ -181,21 +181,23 @@ export default function CategoryLightbox() {
           ) : null}
 
           <section ref={gallerySectionRef} className={styles.gallerySection}>
+            <div className={styles.info}>
+              <div className={styles.meta}>
+                <span className={styles.category}>{activeItem.category}</span>
+                <time dateTime={activeItem.publishedAt}>{activeItem.publishedAt}</time>
+                <span className={styles.views}>
+                  {getViewCount(activeItem, selectedMedia?.id)} media opens
+                </span>
+              </div>
+              <h2 id="category-lightbox-title">{activeItem.title}</h2>
+              <p>{activeItem.descriptionHtml}</p>
+            </div>
+
             <MediaPreview
               item={activeItem}
               selectedMedia={selectedMedia}
               onWheelDelta={handleMainMediaWheel}
             />
-
-            <div className={styles.info}>
-              <span className={styles.category}>{activeItem.category}</span>
-              <time dateTime={activeItem.publishedAt}>{activeItem.publishedAt}</time>
-              <span className={styles.views}>
-                {getViewCount(activeItem, selectedMedia?.id)} media opens
-              </span>
-              <h2 id="category-lightbox-title">{activeItem.title}</h2>
-              <p>{activeItem.descriptionHtml}</p>
-            </div>
 
             <div className={styles.controls} aria-label="Sequential category navigation">
               <button type="button" onClick={showPreviousItem}>
@@ -302,7 +304,17 @@ function getRailMediaLabel(
   media: PortfolioMedia,
   previousMedia: PortfolioMedia[],
 ) {
-  if (item.id === 'personal-military-radio') {
+  if (
+    item.id === 'personal-military-radio' ||
+    item.id === 'personal-fire-place' ||
+    item.id === 'personal-sci-fi-corridor' ||
+    item.id === 'personal-head-hunter' ||
+    item.id === 'personal-babarian' ||
+    item.id === 'personal-android' ||
+    item.id === 'personal-zbrush-rock-environment-practice' ||
+    item.id === 'personal-zbrush-study' ||
+    item.id === 'personal-material-study'
+  ) {
     return getMediaDisplayLabel(media, previousMedia);
   }
 
@@ -356,7 +368,7 @@ const VideoSection = forwardRef<HTMLDivElement, VideoSectionProps>(function Vide
         >
           <iframe
             title={`${media.title ?? item.title} video preview`}
-            src={`https://www.youtube.com/embed/${media.youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0`}
+            src={`https://www.youtube.com/embed/${media.youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0${media.youtubeStartSeconds ? `&start=${media.youtubeStartSeconds}` : ''}`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
@@ -399,7 +411,7 @@ function MediaPreview({ item, selectedMedia, onWheelDelta }: MediaPreviewProps) 
       >
         <iframe
           title={`${mediaTitle} video preview`}
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=0&controls=1&modestbranding=1&rel=0`}
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=0&controls=1&modestbranding=1&rel=0${primaryMedia?.youtubeStartSeconds ? `&start=${primaryMedia.youtubeStartSeconds}` : ''}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
         />
@@ -418,10 +430,6 @@ function MediaPreview({ item, selectedMedia, onWheelDelta }: MediaPreviewProps) 
   return (
     <div ref={previewRef} className={styles.mediaPreview}>
       <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
-      <div className={styles.mediaCaption}>
-        <span>{primaryMedia ? getMediaDisplayLabel(primaryMedia, []) : mediaType}</span>
-        <strong>{mediaTitle}</strong>
-      </div>
     </div>
   );
 }

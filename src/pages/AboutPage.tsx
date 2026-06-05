@@ -1,20 +1,24 @@
-import { useRef, useState, type RefObject } from 'react';
-import { mockCompanies } from '../data/mockPortfolio';
-import type { Company } from '../features/portfolio/portfolio.types';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './AboutPage.module.css';
 
-const contactEmail = 'dukgoo.env@gmail.com';
+const contactEmail = 'sungyeonlee1350@gmail.com';
+
+const tools = [
+  '3ds Max',
+  'Maya',
+  'ZBrush',
+  'Substance Painter',
+  'Substance Designer',
+  'Marvelous Designer',
+  'Marmoset Toolbag',
+  'Unreal Engine 5',
+  'Photoshop',
+  'Nuke',
+];
 
 export default function AboutPage() {
-  const professionalRef = useRef<HTMLElement>(null);
-  const worksRef = useRef<HTMLElement>(null);
-  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [toastVisible, setToastVisible] = useState(false);
-
-  const scrollToSection = (section: 'professional' | 'works') => {
-    const target = section === 'professional' ? professionalRef.current : worksRef.current;
-    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   const copyEmail = async () => {
     await navigator.clipboard.writeText(contactEmail);
@@ -24,22 +28,12 @@ export default function AboutPage() {
 
   return (
     <div className={styles.aboutPage}>
-      <ProfileIntro onWorksClick={() => scrollToSection('works')} />
-      <CareerSummary />
-      <WorksLinkGroup
-        onWorksClick={() => scrollToSection('works')}
-        onProfessionalClick={() => scrollToSection('professional')}
-      />
-      <ProfessionalCompanyList
-        sectionRef={professionalRef}
-        onCompanySelect={setSelectedCompany}
-      />
-      <PortfolioSections sectionRef={worksRef} />
+      <ProfileIntro />
+      <AboutMe />
+      <ToolsSection />
+      <EducationSection />
+      <PortfolioLinks />
       <AboutContact onCopyEmail={copyEmail} />
-
-      {selectedCompany ? (
-        <CompanyModal company={selectedCompany} onClose={() => setSelectedCompany(null)} />
-      ) : null}
 
       <div className={`${styles.toast} ${toastVisible ? styles.toastVisible : ''}`} role="status">
         Email copied
@@ -48,139 +42,127 @@ export default function AboutPage() {
   );
 }
 
-interface ProfileIntroProps {
-  onWorksClick: () => void;
-}
-
-function ProfileIntro({ onWorksClick }: ProfileIntroProps) {
+function ProfileIntro() {
   return (
     <section className={styles.profileIntro} aria-labelledby="about-title">
       <div className={styles.heroCopy}>
-        <span className={styles.eyebrow}>About First Experience</span>
+        <span className={styles.eyebrow}>3D Environment Artist</span>
         <h1 id="about-title">
-          Background
-          <span>Artist</span>
+          Sungyeon
+          <span>Lee</span>
         </h1>
         <p>
-          Cinematic environment portfolio hub connecting professional projects, personal studies,
-          sketch notes, design work, and Re:Lighting explorations.
+          I am a 3D Environment Artist with a strong foundation in modeling and a solid
+          understanding of the complete real-time asset production pipeline.
         </p>
-        <button type="button" className={styles.primaryAction} onClick={onWorksClick}>
-          Explore Works
-        </button>
       </div>
-      <div className={styles.profileFrame} aria-label="Profile visual placeholder">
-        <span>HOJOON</span>
-      </div>
+      <aside className={styles.profileFrame} aria-label="Profile details">
+        <dl>
+          <div>
+            <dt>Name</dt>
+            <dd>Sungyeon Lee</dd>
+          </div>
+          <div>
+            <dt>Birth</dt>
+            <dd>2001.11</dd>
+          </div>
+          <div>
+            <dt>Title</dt>
+            <dd>3D Environment Artist</dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd>{contactEmail}</dd>
+          </div>
+        </dl>
+      </aside>
     </section>
   );
 }
 
-function CareerSummary() {
+function AboutMe() {
   return (
-    <section className={styles.careerSummary} aria-labelledby="career-title">
+    <section className={styles.textSection} aria-labelledby="about-me-title">
       <div>
         <span className={styles.sectionIndex}>01</span>
-        <h2 id="career-title">Career Summary</h2>
+        <h2 id="about-me-title">About Me</h2>
       </div>
-      <p>
-        Work spans environment art, spatial design, stage design, personal asset production,
-        sketch documentation, designer studies, and lighting reinterpretation. Architecture v2
-        treats this page as the navigation hub, with each career thread branching into a dedicated
-        portfolio flow.
-      </p>
-      <dl className={styles.summaryStats}>
-        <div>
-          <dt>Focus</dt>
-          <dd>Environment / Space / Lighting</dd>
-        </div>
-        <div>
-          <dt>Pipeline</dt>
-          <dd>3DS Max / ZBrush / UE5 / SketchUp</dd>
-        </div>
-        <div>
-          <dt>Mode</dt>
-          <dd>Professional + Personal Archive</dd>
-        </div>
-      </dl>
-    </section>
-  );
-}
-
-interface WorksLinkGroupProps {
-  onWorksClick: () => void;
-  onProfessionalClick: () => void;
-}
-
-function WorksLinkGroup({ onWorksClick, onProfessionalClick }: WorksLinkGroupProps) {
-  return (
-    <section className={styles.worksLinkGroup} aria-labelledby="links-title">
-      <span className={styles.sectionIndex}>02</span>
-      <h2 id="links-title">Works Link Group</h2>
-      <div className={styles.linkButtons}>
-        <button type="button" onClick={onWorksClick}>
-          Works
-        </button>
-        <button type="button" onClick={onProfessionalClick}>
-          Professional
-        </button>
+      <div className={styles.copyStack}>
+        <p>
+          My background in Computer Animation provided experience across multiple disciplines,
+          including character creation, visual development, animation, and compositing. Through
+          this process, I developed a strong understanding of form, proportion, and visual
+          storytelling.
+        </p>
+        <p>
+          Today, my primary focus is environment art, where I specialize in creating detailed,
+          production-ready assets and environments for real-time applications using
+          industry-standard workflows and tools.
+        </p>
       </div>
     </section>
   );
 }
 
-interface ProfessionalCompanyListProps {
-  sectionRef: RefObject<HTMLElement | null>;
-  onCompanySelect: (company: Company) => void;
-}
-
-function ProfessionalCompanyList({ sectionRef, onCompanySelect }: ProfessionalCompanyListProps) {
+function ToolsSection() {
   return (
-    <section ref={sectionRef} className={styles.companySection} aria-labelledby="professional-title">
+    <section className={styles.toolsSection} aria-labelledby="tools-title">
       <div className={styles.sectionHeader}>
-        <span className={styles.sectionIndex}>03</span>
-        <h2 id="professional-title">Professional Company List</h2>
-        <p>Company cards open a placeholder modal state now. Full lightbox behavior comes later.</p>
+        <span className={styles.sectionIndex}>02</span>
+        <h2 id="tools-title">Tools</h2>
       </div>
-      <div className={styles.companyList}>
-        {mockCompanies.map((company) => (
-          <button
-            key={company.id}
-            type="button"
-            className={styles.companyCard}
-            onClick={() => onCompanySelect(company)}
-          >
-            <span>{company.period}</span>
-            <h3>{company.displayName}</h3>
-            <p>{company.role}</p>
-          </button>
+      <ul className={styles.toolGrid}>
+        {tools.map((tool) => (
+          <li key={tool}>{tool}</li>
         ))}
+      </ul>
+    </section>
+  );
+}
+
+function EducationSection() {
+  return (
+    <section className={styles.textSection} aria-labelledby="education-title">
+      <div>
+        <span className={styles.sectionIndex}>03</span>
+        <h2 id="education-title">Education</h2>
+      </div>
+      <div className={styles.copyStack}>
+        <div className={styles.educationCard}>
+          <span>2023 - 2025</span>
+          <h3>Bachelor of Science in Computer Animation</h3>
+          <p>Full Sail University, Florida, USA</p>
+        </div>
+        <p>
+          Completed comprehensive training across the professional 3D production pipeline,
+          including visual development, modeling, character animation, compositing, and final scene
+          presentation.
+        </p>
+        <p>
+          Developed practical experience with industry-standard tools such as Maya, ZBrush,
+          Substance 3D Painter, Substance 3D Designer, and Unreal Engine.
+        </p>
       </div>
     </section>
   );
 }
 
-interface PortfolioSectionsProps {
-  sectionRef: RefObject<HTMLElement | null>;
-}
-
-function PortfolioSections({ sectionRef }: PortfolioSectionsProps) {
-  const sections = ['Personal Works', 'Sketch', 'Designer', 'Re:Lighting', 'ALL Portfolio'];
-
+function PortfolioLinks() {
   return (
-    <section ref={sectionRef} className={styles.portfolioSections} aria-labelledby="works-title">
+    <section className={styles.portfolioSections} aria-labelledby="works-title">
       <div className={styles.sectionHeader}>
         <span className={styles.sectionIndex}>04</span>
-        <h2 id="works-title">Portfolio Sections</h2>
-        <p>These are page-entry shells for the portfolio flows defined in Architecture v2.</p>
+        <h2 id="works-title">Portfolio</h2>
       </div>
       <div className={styles.portfolioGrid}>
-        {sections.map((section) => (
-          <article key={section} className={styles.portfolioTile}>
-            <span>Open Route</span>
-            <h3>{section}</h3>
-          </article>
-        ))}
+        <Link to="/personal-works" className={styles.portfolioTile}>
+          <span>View Works</span>
+          <h3>Personal Works</h3>
+        </Link>
+        <Link to="/all-portfolio" className={styles.portfolioTile}>
+          <span>View Archive</span>
+          <h3>ALL Portfolio</h3>
+        </Link>
       </div>
     </section>
   );
@@ -192,51 +174,15 @@ interface AboutContactProps {
 
 function AboutContact({ onCopyEmail }: AboutContactProps) {
   return (
-    <section className={styles.aboutContact} aria-labelledby="contact-title">
+    <section id="contact" className={styles.aboutContact} aria-labelledby="contact-title">
       <div>
         <span className={styles.sectionIndex}>05</span>
-        <h2 id="contact-title">About Contact</h2>
-        <p>For portfolio reviews, collaborations, and production conversations.</p>
+        <h2 id="contact-title">Contact</h2>
+        <p>For portfolio reviews, opportunities, and contact.</p>
       </div>
       <button type="button" className={styles.emailButton} onClick={onCopyEmail}>
         Email - {contactEmail}
       </button>
     </section>
-  );
-}
-
-interface CompanyModalProps {
-  company: Company;
-  onClose: () => void;
-}
-
-function CompanyModal({ company, onClose }: CompanyModalProps) {
-  return (
-    <div className={styles.modalBackdrop} role="presentation" onMouseDown={onClose}>
-      <section
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="company-modal-title"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
-        <span className={styles.eyebrow}>Placeholder Modal</span>
-        <h2 id="company-modal-title">{company.displayName}</h2>
-        <p>{company.description}</p>
-        <dl>
-          <div>
-            <dt>Role</dt>
-            <dd>{company.role}</dd>
-          </div>
-          <div>
-            <dt>Period</dt>
-            <dd>{company.period}</dd>
-          </div>
-        </dl>
-        <button type="button" onClick={onClose}>
-          Close
-        </button>
-      </section>
-    </div>
   );
 }

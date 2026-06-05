@@ -19,6 +19,7 @@ export interface ImportedWixProjectDraft {
   sourceUrl: string;
   title: string;
   period: string;
+  personalSubcategory: 'Environment' | 'Character' | 'Study';
   tools: string[];
   description: string;
   videos: ImportedWixBatchVideo[];
@@ -53,6 +54,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/fire-place',
     title: 'Fire Place',
     period: '2026.02 ~ 2026.03',
+    personalSubcategory: 'Environment',
     tools: [],
     description: '2026.02 ~ 2026.03',
     videos: [youtube('qGRKlraMQwc')],
@@ -74,6 +76,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/project-title-6',
     title: 'Sci-fi corridor',
     period: '2025.05 ~ 2025.09',
+    personalSubcategory: 'Environment',
     tools: [],
     description: '2025.05 ~ 2025.09',
     videos: [youtube('w77OL9aj7Pk')],
@@ -98,6 +101,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/zbrush-rock-environment-practice',
     title: 'Zbrush Rock Environment Practice',
     period: '2026.03 ~ 2026.04',
+    personalSubcategory: 'Study',
     tools: ['ZBRUSH'],
     description: '2026.03 ~ 2026.04',
     videos: [],
@@ -116,6 +120,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/zbrush-rock-study',
     title: 'Zbrush Rock Study',
     period: '2026.01 ~ 2026.02',
+    personalSubcategory: 'Study',
     tools: ['ZBRUSH'],
     description: '2026.01 ~ 2026.02',
     videos: [],
@@ -135,6 +140,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/project-title-1',
     title: 'Substance Designer study',
     period: '2025.09 ~ 2025.10',
+    personalSubcategory: 'Study',
     tools: ['SUBSTANCE DESIGNER'],
     description: '2025.09 ~ 2025.10',
     videos: [],
@@ -155,6 +161,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/project-title-3',
     title: 'Zbrush stone pillar study',
     period: '2025.12',
+    personalSubcategory: 'Study',
     tools: ['ZBRUSH'],
     description: '2025.12',
     videos: [],
@@ -173,6 +180,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/project-title-5',
     title: 'Zbrush tiling study',
     period: '2025.10',
+    personalSubcategory: 'Study',
     tools: ['ZBRUSH'],
     description: '2025.10',
     videos: [],
@@ -190,6 +198,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/head-hunter',
     title: 'Head Hunter',
     period: '2025.01 ~ 2025.02',
+    personalSubcategory: 'Character',
     tools: [],
     description:
       'Fullsail University student project\n2025.01 ~ 2025.02\n\nReference concept art :Jin kwang Park\nhttps://www.artstation.com/artwork/EVEEr2',
@@ -209,8 +218,9 @@ export const importedWixPortfolioBatch = [
     slug: 'babarian',
     sourceUrl:
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/babarian',
-    title: 'Babarian',
+    title: 'Barbarian',
     period: '2024.11 ~ 2025.01',
+    personalSubcategory: 'Character',
     tools: [],
     description:
       'Fullsail University student project\n2024.11 ~ 2025.01\n\nReference concept art :seok young choi\nhttps://www.artstation.com/artwork/zA0NaZ',
@@ -231,6 +241,7 @@ export const importedWixPortfolioBatch = [
       'https://sungyeonlee1350.wixsite.com/sungyeon-lee-portfol/portfolio-collections/my-portfolio/android',
     title: 'Android',
     period: '2024.09 ~ 2024.10',
+    personalSubcategory: 'Character',
     tools: ['MAYA'],
     description:
       'Fullsail University student project\n2024.09 ~ 2024.10\n\nModeled in Maya.\nConcept from Pinterest https://pin.it/1V6Mkggvq',

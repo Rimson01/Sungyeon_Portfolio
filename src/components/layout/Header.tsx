@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <NavLink to="/" className={styles.brand}>
-        Portfolio v2
+        Sungyeon Lee
       </NavLink>
       <nav className={styles.nav} aria-label="Main navigation">
         {routes.map((route) => (
@@ -20,6 +20,9 @@ export default function Header() {
             {route.label}
           </NavLink>
         ))}
+        <a className={styles.link} href="/#contact">
+          Contact
+        </a>
       </nav>
     </header>
   );

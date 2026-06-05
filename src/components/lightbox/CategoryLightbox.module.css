@@ -4,7 +4,7 @@
   z-index: 80;
   display: grid;
   place-items: center;
-  padding: 10px;
+  padding: 4px;
   background: rgba(0, 0, 0, 0.78);
   backdrop-filter: blur(14px);
 }
@@ -12,9 +12,9 @@
 .lightbox {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
-  width: min(96vw, 1800px);
-  height: min(92vh, 1040px);
-  max-height: 92vh;
+  width: min(95vw, 1900px);
+  height: 95vh;
+  max-height: 95vh;
   overflow: hidden;
   border: 1px solid rgba(51, 170, 255, 0.34);
   background:
@@ -65,7 +65,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 14px 18px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -138,7 +138,7 @@
   align-content: center;
   gap: 18px;
   justify-items: center;
-  min-height: calc(92vh - 57px);
+  min-height: calc(95vh - 57px);
   padding: 28px;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -160,8 +160,8 @@
 
 .gallerySection {
   display: grid;
-  grid-template-rows: minmax(300px, 1fr) auto auto;
-  min-height: calc(92vh - 57px);
+  grid-template-rows: auto minmax(420px, 1fr) auto;
+  min-height: calc(95vh - 57px);
   scroll-margin-top: 58px;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -177,10 +177,11 @@
   gap: 8px;
   align-content: end;
   justify-items: start;
-  height: auto;
+  height: 100%;
   min-height: 0;
-  margin: 28px 28px 0;
-  padding: 24px;
+  max-height: none;
+  margin: 0 24px;
+  padding: 16px;
   border: 1px solid rgba(221, 216, 204, 0.08);
   text-align: left;
 }
@@ -195,39 +196,17 @@
   background: #050505;
 }
 
-.mediaCaption {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  gap: 4px;
-  max-width: min(420px, 82%);
-  margin: auto auto 0 0;
-  padding: 10px 13px;
-  background: rgba(8, 8, 8, 0.68);
-  border: 1px solid rgba(221, 216, 204, 0.08);
-}
-
-.mediaPreview span {
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-.mediaPreview strong {
-  font-family: var(--font-display);
-  font-size: clamp(24px, 3vw, 42px);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  line-height: 0.95;
-  text-transform: uppercase;
-}
-
 .info {
   display: grid;
-  gap: 7px;
-  padding: 26px 28px 30px;
+  gap: 4px;
+  padding: 12px 24px 10px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
 }
 
 .category,
@@ -235,8 +214,8 @@
 .views {
   color: var(--color-accent);
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
+  font-size: 10px;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
@@ -248,7 +227,7 @@
 .info h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(40px, 5.6vw, 72px);
+  font-size: clamp(32px, 4vw, 52px);
   font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 0.9;
@@ -259,7 +238,7 @@
   max-width: 860px;
   margin: 0;
   color: var(--color-muted);
-  line-height: 1.65;
+  line-height: 1.42;
   white-space: pre-line;
 }
 
@@ -388,6 +367,10 @@
     min-height: calc(100vh - 57px);
   }
 
+  .gallerySection {
+    grid-template-rows: auto minmax(300px, 1fr) auto;
+  }
+
   .rail {
     grid-auto-flow: column;
     grid-auto-columns: minmax(150px, 1fr);
@@ -402,7 +385,7 @@
     height: auto;
     min-height: 300px;
     max-height: none;
-    margin: 16px 14px 0;
+    margin: 0 14px;
   }
 
   .videoSection {

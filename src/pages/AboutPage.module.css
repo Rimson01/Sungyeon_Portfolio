@@ -7,7 +7,7 @@
 .profileIntro {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
   gap: 32px;
   min-height: calc(100vh - 148px);
   align-items: center;
@@ -52,7 +52,7 @@
   display: grid;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(72px, 13vw, 164px);
+  font-size: clamp(70px, 12vw, 154px);
   font-weight: 400;
   letter-spacing: 0.015em;
   line-height: 0.82;
@@ -64,61 +64,57 @@
 }
 
 .heroCopy p {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0;
   color: var(--color-muted);
   font-size: 17px;
   line-height: 1.8;
 }
 
-.primaryAction,
-.linkButtons button,
-.emailButton,
-.modal button {
-  width: fit-content;
-  border: 1px solid rgba(51, 170, 255, 0.35);
-  background: rgba(51, 170, 255, 0.08);
-  color: var(--color-text);
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  padding: 13px 18px;
-  text-transform: uppercase;
-  transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
-}
-
-.primaryAction:hover,
-.linkButtons button:hover,
-.emailButton:hover,
-.modal button:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  transform: translateY(-1px);
-}
-
 .profileFrame {
   display: grid;
   min-height: 520px;
-  place-items: center;
+  align-content: end;
   border: 1px solid var(--color-border);
   background:
-    radial-gradient(circle at 60% 30%, rgba(51, 170, 255, 0.18), transparent 32%),
-    linear-gradient(135deg, rgba(221, 216, 204, 0.08), rgba(51, 170, 255, 0.04)),
+    radial-gradient(circle at 68% 22%, rgba(51, 170, 255, 0.22), transparent 30%),
+    linear-gradient(145deg, rgba(221, 216, 204, 0.08), rgba(51, 170, 255, 0.04)),
     var(--color-surface);
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, 0.42);
+  padding: 24px;
 }
 
-.profileFrame span {
-  color: transparent;
-  font-family: var(--font-display);
-  font-size: clamp(72px, 9vw, 132px);
-  letter-spacing: 0.08em;
-  -webkit-text-stroke: 1px rgba(221, 216, 204, 0.42);
+.profileFrame dl {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  background: rgba(221, 216, 204, 0.1);
 }
 
-.careerSummary,
-.worksLinkGroup,
-.companySection,
+.profileFrame div {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  background: rgba(8, 8, 8, 0.72);
+}
+
+.profileFrame dt,
+.educationCard span {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.profileFrame dd {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+.textSection,
+.toolsSection,
 .portfolioSections,
 .aboutContact {
   position: relative;
@@ -127,18 +123,16 @@
   scroll-margin-top: 96px;
 }
 
-.careerSummary {
+.textSection {
   grid-template-columns: minmax(180px, 0.35fr) minmax(0, 0.65fr);
   align-items: start;
-  padding: 36px 0;
+  padding: 34px 0;
   border-bottom: 1px solid var(--color-border);
 }
 
-.careerSummary h2,
-.worksLinkGroup h2,
+.textSection h2,
 .sectionHeader h2,
-.aboutContact h2,
-.modal h2 {
+.aboutContact h2 {
   margin: 0;
   font-family: var(--font-display);
   font-size: clamp(42px, 7vw, 86px);
@@ -148,48 +142,21 @@
   text-transform: uppercase;
 }
 
-.careerSummary p,
-.sectionHeader p,
-.aboutContact p,
-.modal p {
-  max-width: 820px;
+.copyStack {
+  display: grid;
+  gap: 16px;
+}
+
+.copyStack p,
+.aboutContact p {
+  max-width: 840px;
   margin: 0;
   color: var(--color-muted);
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
-.summaryStats {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  margin: 8px 0 0;
-  background: var(--color-border);
-}
-
-.summaryStats div {
-  display: grid;
-  gap: 8px;
-  padding: 18px;
-  background: var(--color-surface);
-}
-
-.summaryStats dt,
-.modal dt {
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.summaryStats dd,
-.modal dd {
-  margin: 0;
-  color: var(--color-muted);
-}
-
-.worksLinkGroup {
+.toolsSection,
+.portfolioSections {
   padding: 28px;
   border: 1px solid var(--color-border);
   background:
@@ -197,76 +164,70 @@
     var(--color-surface);
 }
 
-.linkButtons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
 .sectionHeader {
   display: grid;
   gap: 10px;
 }
 
-.companyList {
+.toolGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.companyCard {
-  display: grid;
-  gap: 12px;
-  min-height: 220px;
-  padding: 24px;
-  text-align: left;
-  border: 1px solid var(--color-border);
-  background:
-    radial-gradient(circle at 85% 15%, rgba(51, 170, 255, 0.14), transparent 28%),
-    var(--color-surface);
-  color: var(--color-text);
-  cursor: pointer;
-}
-
-.companyCard:hover {
-  border-color: rgba(51, 170, 255, 0.46);
-}
-
-.companyCard span {
-  color: var(--color-accent);
+.toolGrid li {
+  border: 1px solid rgba(221, 216, 204, 0.12);
+  background: rgba(8, 8, 8, 0.48);
+  color: var(--color-muted);
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.16em;
-}
-
-.companyCard h3,
-.portfolioTile h3 {
-  margin: auto 0 0;
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  line-height: 0.95;
+  letter-spacing: 0.08em;
+  min-height: 52px;
+  padding: 16px;
   text-transform: uppercase;
 }
 
-.companyCard p {
+.educationCard {
+  display: grid;
+  gap: 10px;
+  border-left: 1px solid rgba(51, 170, 255, 0.48);
+  background: linear-gradient(90deg, rgba(51, 170, 255, 0.08), transparent);
+  padding: 18px 0 18px 20px;
+}
+
+.educationCard h3 {
   margin: 0;
-  color: var(--color-muted);
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .portfolioGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .portfolioTile {
   display: grid;
-  min-height: 180px;
-  padding: 18px;
+  min-height: 190px;
+  padding: 20px;
   border: 1px solid var(--color-border);
   background: linear-gradient(145deg, rgba(221, 216, 204, 0.06), rgba(51, 170, 255, 0.04));
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.portfolioTile:hover {
+  border-color: rgba(51, 170, 255, 0.46);
+  transform: translateY(-2px);
 }
 
 .portfolioTile span {
@@ -274,6 +235,16 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.portfolioTile h3 {
+  margin: auto 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 0.95;
   text-transform: uppercase;
 }
 
@@ -285,35 +256,24 @@
 }
 
 .emailButton {
+  width: fit-content;
+  border: 1px solid rgba(51, 170, 255, 0.35);
+  background: rgba(51, 170, 255, 0.08);
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  padding: 13px 18px;
+  text-transform: uppercase;
+  transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
   white-space: nowrap;
 }
 
-.modalBackdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(12px);
-}
-
-.modal {
-  display: grid;
-  gap: 18px;
-  width: min(620px, 100%);
-  border: 1px solid rgba(51, 170, 255, 0.36);
-  background: #080808;
-  padding: 28px;
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.64);
-}
-
-.modal dl {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
+.emailButton:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
 }
 
 .toast {
@@ -342,16 +302,16 @@
 
 @media (max-width: 960px) {
   .profileIntro,
-  .careerSummary,
+  .textSection,
   .aboutContact {
     grid-template-columns: 1fr;
   }
 
   .profileFrame {
-    min-height: 320px;
+    min-height: 360px;
   }
 
-  .portfolioGrid {
+  .toolGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -366,20 +326,17 @@
     padding-top: 32px;
   }
 
-  .summaryStats,
-  .companyList,
-  .portfolioGrid,
-  .modal dl {
-    grid-template-columns: 1fr;
-  }
-
-  .worksLinkGroup,
-  .modal {
+  .toolsSection,
+  .portfolioSections {
     padding: 20px;
   }
 
-  .emailButton,
-  .primaryAction {
+  .toolGrid,
+  .portfolioGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .emailButton {
     width: 100%;
   }
 }
