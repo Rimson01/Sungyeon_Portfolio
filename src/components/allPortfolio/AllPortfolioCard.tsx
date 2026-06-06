@@ -40,6 +40,6 @@ function getImageClassName(itemId: string) {
   if (itemId === 'personal-sci-fi-corridor') return 'sciFiCorridorImage';
   if (itemId === 'personal-zbrush-rock-environment-practice') return 'rockSceneImage';
   if (itemId === 'personal-zbrush-study') return 'zbrushStudyImage';
-  if (itemId === 'personal-material-study') return 'materialStudyImage';
+  if (itemId.startsWith('personal-material-')) return 'materialStudyImage';
   return 'defaultImage';
 }

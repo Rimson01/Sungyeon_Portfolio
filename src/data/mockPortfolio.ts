@@ -82,7 +82,6 @@ const firePlaceMedia = [
     id: `fire-place-youtube-${String(index + 1).padStart(2, '0')}`,
     type: 'youtube' as const,
     youtubeId: video.id,
-    youtubeStartSeconds: 23,
     thumbnailUrl: video.posterUrl,
     title: `${firePlaceImport.title} video`,
     alt: `${firePlaceImport.title} video`,
@@ -114,6 +113,10 @@ const firePlaceMedia = [
   })),
 ];
 
+const sciFiCorridorImages = sciFiCorridorImport.images
+  .map((image, sourceIndex) => ({ image, sourceIndex }))
+  .filter(({ sourceIndex }) => sourceIndex !== 1 && sourceIndex !== 11);
+
 const sciFiCorridorMedia = [
   ...sciFiCorridorImport.videos.map((video, index) => ({
     id: `sci-fi-corridor-youtube-${String(index + 1).padStart(2, '0')}`,
@@ -127,17 +130,17 @@ const sciFiCorridorMedia = [
     isCountable: true,
     lightboxEnabled: true,
   })),
-  ...sciFiCorridorImport.images.map((image, index) => ({
+  ...sciFiCorridorImages.map(({ image, sourceIndex }, index) => ({
     id: image.id,
     type: 'image' as const,
     url: image.highResolutionUrl,
     thumbnailUrl: image.highResolutionUrl,
-    title: `${sciFiCorridorImport.title} ${String(index + 1).padStart(2, '0')}`,
+    title: `${sciFiCorridorImport.title} ${String(sourceIndex + 1).padStart(2, '0')}`,
     alt: sciFiCorridorImport.title,
     displayLabel:
-      index < 6
-        ? `Day Render ${String(index + 1).padStart(2, '0')}`
-        : `Night Render ${String(index - 5).padStart(2, '0')}`,
+      sourceIndex < 6
+        ? `Day Render ${String(sourceIndex + 1).padStart(2, '0')}`
+        : `Night Render ${String(sourceIndex - 5).padStart(2, '0')}`,
     order: sciFiCorridorImport.videos.length + index + 1,
     isCountable: true,
     lightboxEnabled: true,
@@ -184,6 +187,7 @@ const barbarianMedia = [
     id: `barbarian-youtube-${String(index + 1).padStart(2, '0')}`,
     type: 'youtube' as const,
     youtubeId: video.id,
+    youtubeStartSeconds: 23,
     thumbnailUrl: video.posterUrl,
     title: `${barbarianImport.title} video`,
     alt: `${barbarianImport.title} video`,
@@ -218,6 +222,7 @@ const androidMedia = [
     id: `android-youtube-${String(index + 1).padStart(2, '0')}`,
     type: 'youtube' as const,
     youtubeId: video.id,
+    youtubeStartSeconds: 43,
     thumbnailUrl: video.posterUrl,
     title: `${androidImport.title} video`,
     alt: `${androidImport.title} video`,
@@ -314,44 +319,40 @@ const zbrushStudyMedia = (() => {
   );
 })();
 
-const materialStudyTitle = 'Material Study';
-const materialStudyLabels = [
-  'Fabric 01',
-  'Fabric 02',
-  'Fabric 03',
-  'Tile 01',
-  'Tile 02',
-  'Tile 03',
-  'Tile 04',
-  'Ornament Material 02',
-];
-
-const materialStudyMedia = [
-  ...materialStudyImport.videos.map((video, index) => ({
-    id: `material-study-youtube-${String(index + 1).padStart(2, '0')}`,
-    type: 'youtube' as const,
-    youtubeId: video.id,
-    thumbnailUrl: video.posterUrl,
-    title: `${materialStudyTitle} video`,
-    alt: `${materialStudyTitle} video`,
-    displayLabel: 'Video',
-    order: index + 1,
-    isCountable: true,
-    lightboxEnabled: true,
-  })),
-  ...materialStudyImport.images.map((image, index) => ({
-    id: `material-study-${image.id}`,
+function createMaterialStudyMedia(
+  projectId: string,
+  title: string,
+  images: (typeof importedWixPortfolioBatch)[number]['images'],
+) {
+  return images.map((image, index) => ({
+    id: `${projectId}-${image.id}`,
     type: 'image' as const,
     url: image.highResolutionUrl,
     thumbnailUrl: image.highResolutionUrl,
-    title: `${materialStudyTitle} ${String(index + 1).padStart(2, '0')}`,
-    alt: materialStudyTitle,
-    displayLabel: materialStudyLabels[index],
-    order: materialStudyImport.videos.length + index + 1,
+    title: `${title} ${String(index + 1).padStart(2, '0')}`,
+    alt: title,
+    displayLabel: `${title} ${String(index + 1).padStart(2, '0')}`,
+    order: index + 1,
     isCountable: true,
     lightboxEnabled: true,
-  })),
-];
+  }));
+}
+
+const fabricStudyMedia = createMaterialStudyMedia(
+  'fabric-study',
+  'Fabric',
+  materialStudyImport.images.slice(0, 3),
+);
+const tileStudyMedia = createMaterialStudyMedia(
+  'tile-study',
+  'Tile',
+  materialStudyImport.images.slice(3, 7),
+);
+const ornamentStudyMedia = createMaterialStudyMedia(
+  'ornament-study',
+  'Ornament',
+  materialStudyImport.images.slice(7, 8),
+);
 
 const militaryRadioMedia = [
   ...(importedWixMilitaryRadio.video
@@ -576,8 +577,8 @@ export const mockPortfolioItems: PortfolioItem[] = [
     uploadedAt: '2025-09-30',
     isPublished: true,
     isFeatured: true,
-    thumbnailUrl: sciFiCorridorImport.images[0].highResolutionUrl,
-    hoverUrl: sciFiCorridorImport.images[1]?.highResolutionUrl,
+    thumbnailUrl: sciFiCorridorImages[0].image.highResolutionUrl,
+    hoverUrl: sciFiCorridorImages[1]?.image.highResolutionUrl,
     youtubeId: sciFiCorridorImport.videos[0]?.id,
     mediaType: 'image',
     order: 3,
@@ -598,6 +599,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
     slug: 'head-hunter',
     category: 'PERSONAL',
     personalSubcategory: 'Character',
+    archiveGroup: 'schoolWorks',
     section: 'personalWorks',
     projectType: 'Character',
     descriptionHtml: `Full Sail University 학생 프로젝트.
@@ -617,9 +619,9 @@ export const mockPortfolioItems: PortfolioItem[] = [
     hoverUrl: headHunterImport.images[1]?.highResolutionUrl,
     youtubeId: headHunterImport.videos[0]?.id,
     mediaType: 'image',
-    order: 7,
-    allOrder: 9,
-    categoryOrder: 7,
+    order: 9,
+    allOrder: 11,
+    categoryOrder: 9,
     lightboxGroupId: 'PERSONAL',
     chips: [{ label: 'Character', highlighted: true }],
     stats: [
@@ -635,6 +637,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
     slug: 'babarian',
     category: 'PERSONAL',
     personalSubcategory: 'Character',
+    archiveGroup: 'schoolWorks',
     section: 'personalWorks',
     projectType: 'Character',
     descriptionHtml: `Full Sail University 학생 프로젝트.
@@ -653,9 +656,9 @@ export const mockPortfolioItems: PortfolioItem[] = [
     hoverUrl: barbarianImport.images[1]?.highResolutionUrl,
     youtubeId: barbarianImport.videos[0]?.id,
     mediaType: 'image',
-    order: 8,
-    allOrder: 10,
-    categoryOrder: 8,
+    order: 10,
+    allOrder: 12,
+    categoryOrder: 10,
     lightboxGroupId: 'PERSONAL',
     chips: [{ label: 'Character', highlighted: true }],
     stats: [
@@ -671,6 +674,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
     slug: 'android',
     category: 'PERSONAL',
     personalSubcategory: 'Character',
+    archiveGroup: 'schoolWorks',
     section: 'personalWorks',
     projectType: 'Character',
     descriptionHtml: `Full Sail University 학생 프로젝트.
@@ -689,9 +693,9 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     hoverUrl: androidImport.images[1]?.highResolutionUrl,
     youtubeId: androidImport.videos[0]?.id,
     mediaType: 'image',
-    order: 9,
-    allOrder: 11,
-    categoryOrder: 9,
+    order: 11,
+    allOrder: 13,
+    categoryOrder: 11,
     lightboxGroupId: 'PERSONAL',
     chips: [
       { label: 'Character', highlighted: true },
@@ -780,16 +784,17 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     media: zbrushStudyMedia,
   },
   {
-    id: 'personal-material-study',
-    title: materialStudyTitle,
-    subtitle: 'Personal Work',
-    slug: 'material-study',
+    id: 'personal-material-fabric',
+    title: 'Fabric',
+    subtitle: 'Substance Designer',
+    slug: 'material-fabric',
     category: 'PERSONAL',
     personalSubcategory: 'Study',
+    archiveGroup: 'substanceDesigner',
     section: 'personalWorks',
-    projectType: 'Study',
-    descriptionHtml: `Substance Designer를 활용한 재질 제작 스터디입니다.
-석재, 목재, 벽돌, 장식 패턴을 중심으로 절차적 재질 구성과 표면 디테일 표현을 연구했습니다.
+    projectType: 'Material Study',
+    descriptionHtml: `Substance Designer를 활용한 패브릭 재질 스터디입니다.
+직조 구조와 표면의 볼륨, 섬유 질감을 절차적으로 구성했습니다.
 
 제작 기간 : ${materialStudyImport.period}`,
     tools: [...materialStudyImport.tools],
@@ -801,7 +806,6 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     isFeatured: false,
     thumbnailUrl: materialStudyImport.images[0].highResolutionUrl,
     hoverUrl: materialStudyImport.images[1]?.highResolutionUrl,
-    youtubeId: materialStudyImport.videos[0]?.id,
     mediaType: 'image',
     order: 6,
     allOrder: 8,
@@ -814,9 +818,83 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     stats: [
       { key: 'Period', value: materialStudyImport.period },
       { key: 'Tools', value: materialStudyImport.tools.join(' / ') },
-      { key: 'Source', value: 'Wix import draft' },
     ],
-    media: materialStudyMedia,
+    media: fabricStudyMedia,
+  },
+  {
+    id: 'personal-material-tile',
+    title: 'Tile',
+    subtitle: 'Substance Designer',
+    slug: 'material-tile',
+    category: 'PERSONAL',
+    personalSubcategory: 'Study',
+    archiveGroup: 'substanceDesigner',
+    section: 'personalWorks',
+    projectType: 'Material Study',
+    descriptionHtml: `Substance Designer를 활용한 타일 재질 스터디입니다.
+패턴 반복, 경계 마모와 표면 디테일을 절차적으로 제작했습니다.
+
+제작 기간 : ${materialStudyImport.period}`,
+    tools: [...materialStudyImport.tools],
+    role: 'Material Study',
+    year: 2025,
+    publishedAt: '2025-10-31',
+    uploadedAt: '2025-10-31',
+    isPublished: true,
+    isFeatured: false,
+    thumbnailUrl: materialStudyImport.images[3].highResolutionUrl,
+    hoverUrl: materialStudyImport.images[4]?.highResolutionUrl,
+    mediaType: 'image',
+    order: 7,
+    allOrder: 9,
+    categoryOrder: 7,
+    lightboxGroupId: 'PERSONAL',
+    chips: [
+      { label: 'Study', highlighted: true },
+      { label: 'Substance Designer', highlighted: false },
+    ],
+    stats: [
+      { key: 'Period', value: materialStudyImport.period },
+      { key: 'Tools', value: materialStudyImport.tools.join(' / ') },
+    ],
+    media: tileStudyMedia,
+  },
+  {
+    id: 'personal-material-ornament',
+    title: 'Ornament',
+    subtitle: 'Substance Designer',
+    slug: 'material-ornament',
+    category: 'PERSONAL',
+    personalSubcategory: 'Study',
+    archiveGroup: 'substanceDesigner',
+    section: 'personalWorks',
+    projectType: 'Material Study',
+    descriptionHtml: `Substance Designer를 활용한 장식 패턴 재질 스터디입니다.
+형태의 반복과 높이 정보를 중심으로 절차적 패턴을 구성했습니다.
+
+제작 기간 : ${materialStudyImport.period}`,
+    tools: [...materialStudyImport.tools],
+    role: 'Material Study',
+    year: 2025,
+    publishedAt: '2025-10-31',
+    uploadedAt: '2025-10-31',
+    isPublished: true,
+    isFeatured: false,
+    thumbnailUrl: materialStudyImport.images[7].highResolutionUrl,
+    mediaType: 'image',
+    order: 8,
+    allOrder: 10,
+    categoryOrder: 8,
+    lightboxGroupId: 'PERSONAL',
+    chips: [
+      { label: 'Study', highlighted: true },
+      { label: 'Substance Designer', highlighted: false },
+    ],
+    stats: [
+      { key: 'Period', value: materialStudyImport.period },
+      { key: 'Tools', value: materialStudyImport.tools.join(' / ') },
+    ],
+    media: ornamentStudyMedia,
   },
   {
     id: 'sketch-note-youtube',

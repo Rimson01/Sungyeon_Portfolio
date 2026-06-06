@@ -9,8 +9,10 @@ interface AllPortfolioGridProps {
 }
 
 interface ArchiveSection {
-  key: 'environmentStudy' | 'character';
+  key: 'environmentStudy' | 'substanceDesigner' | 'schoolWorks';
   title: string;
+  label?: string;
+  description?: string;
   items: PortfolioItem[];
 }
 
@@ -28,12 +30,22 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
         key: 'environmentStudy',
         title: 'Environment / Study',
         items: publishedItems.filter((item) =>
-          item.personalSubcategory === 'Environment' || item.personalSubcategory === 'Study',
+          item.archiveGroup !== 'substanceDesigner' &&
+          (item.personalSubcategory === 'Environment' || item.personalSubcategory === 'Study'),
         ),
       },
       {
-        key: 'character',
+        key: 'substanceDesigner',
+        title: 'Substance Designer',
+        label: 'Procedural Material Studies',
+        description: 'Fabric, tile, and ornament materials created with procedural workflows.',
+        items: publishedItems.filter((item) => item.archiveGroup === 'substanceDesigner'),
+      },
+      {
+        key: 'schoolWorks',
         title: 'School Works',
+        label: 'Character Modeling Projects',
+        description: 'Character modeling projects created during school coursework.',
         items: publishedItems.filter((item) => item.personalSubcategory === 'Character'),
       },
     ],
@@ -47,11 +59,13 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
       {sections.map((section) => (
         <section
           key={section.key}
-          className={`${styles.section} ${section.key === 'character' ? styles.schoolSection : ''}`}
+          className={`${styles.section} ${
+            section.key === 'environmentStudy' ? '' : styles.editorialSection
+          }`}
           aria-labelledby={`${section.key}-title`}
         >
-          {section.key === 'character' ? (
-            <SchoolWorksHeader count={section.items.length} />
+          {section.key !== 'environmentStudy' ? (
+            <EditorialHeader section={section} />
           ) : (
             <div className={styles.sectionHeader}>
               <h2 id={`${section.key}-title`}>{section.title}</h2>
@@ -61,13 +75,13 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
           {section.key === 'environmentStudy' ? (
             <EnvironmentStudyRows items={section.items} onSelect={openItem} />
           ) : (
-            <div className={styles.character}>
-              {section.items.map((item, index) => (
+            <div className={styles.curatedGrid}>
+              {section.items.map((item) => (
                 <AllPortfolioCard
                   key={item.id}
                   item={item}
                   onSelect={openItem}
-                  className={index === 0 ? styles.schoolFeatureCard : styles.schoolSupportCard}
+                  className={styles.curatedCard}
                 />
               ))}
             </div>
@@ -78,19 +92,22 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
   );
 }
 
-function SchoolWorksHeader({ count }: { count: number }) {
+function EditorialHeader({ section }: { section: ArchiveSection }) {
+  const titleWords = section.title.split(' ');
+  const accentWord = titleWords.pop();
+
   return (
     <div className={styles.schoolHeader}>
       <div className={styles.schoolTitleBlock}>
-        <span>Character Modeling Projects</span>
-        <h2 id="character-title">
-          School <strong>Works</strong>
+        <span>{section.label}</span>
+        <h2 id={`${section.key}-title`}>
+          {titleWords.join(' ')} {accentWord ? <strong>{accentWord}</strong> : null}
         </h2>
       </div>
       <div className={styles.schoolRule} aria-hidden="true" />
       <div className={styles.schoolMeta}>
-        <strong>{count} Projects</strong>
-        <p>Character modeling projects created during school coursework.</p>
+        <strong>{section.items.length} Projects</strong>
+        <p>{section.description}</p>
       </div>
     </div>
   );
@@ -115,7 +132,7 @@ function EnvironmentStudyRows({ items, onSelect }: EnvironmentStudyRowsProps) {
       className: styles.materialRow,
       items: items.slice(5, 6),
     },
-  ];
+  ].filter((row) => row.items.length > 0);
 
   return (
     <div className={styles.environmentStudy}>

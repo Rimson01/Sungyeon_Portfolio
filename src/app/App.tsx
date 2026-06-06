@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import CategoryLightbox from '../components/lightbox/CategoryLightbox';
 import { CategoryLightboxProvider } from '../components/lightbox/CategoryLightboxProvider';
 import AppShell from '../components/layout/AppShell';
-import AboutPage from '../pages/AboutPage';
 import AllPortfolioPage from '../pages/AllPortfolioPage';
 import DesignerPage from '../pages/DesignerPage';
 import PersonalWorksPage from '../pages/PersonalWorksPage';
@@ -18,7 +17,7 @@ export default function App() {
         <AppShell>
           <Routes>
             <Route path="/" element={<AllPortfolioPage />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route path="/about" element={<Navigate to="/#contact" replace />} />
             <Route path="/professional" element={<ProfessionalPage />} />
             <Route path="/personal-works" element={<PersonalWorksPage />} />
             <Route path="/sketch" element={<SketchPage />} />

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import AllPortfolioGrid from '../components/allPortfolio/AllPortfolioGrid';
 import { mockPortfolioItems } from '../data/mockPortfolio';
 import type { PortfolioItem } from '../features/portfolio/portfolio.types';
@@ -10,18 +10,40 @@ const realArchiveItemIds = [
   'personal-sci-fi-corridor',
   'personal-zbrush-rock-environment-practice',
   'personal-zbrush-study',
-  'personal-material-study',
+  'personal-material-fabric',
+  'personal-material-tile',
+  'personal-material-ornament',
   'personal-head-hunter',
   'personal-babarian',
   'personal-android',
 ] as const;
 
 const heroVideoId = 'P4280Zo8gP0';
+const contactEmail = 'sungyeonlee1350@gmail.com';
+const profileTools = [
+  '3ds Max',
+  'Maya',
+  'ZBrush',
+  'Substance Painter',
+  'Substance Designer',
+  'Marvelous Designer',
+  'Marmoset Toolbag',
+  'Unreal Engine 5',
+  'Photoshop',
+  'Nuke',
+];
 
 export default function AllPortfolioPage() {
+  const [toastVisible, setToastVisible] = useState(false);
   const items = realArchiveItemIds
     .map((itemId) => mockPortfolioItems.find((item) => item.id === itemId))
     .filter((item): item is PortfolioItem => Boolean(item));
+
+  const copyEmail = async () => {
+    await navigator.clipboard.writeText(contactEmail);
+    setToastVisible(true);
+    window.setTimeout(() => setToastVisible(false), 1800);
+  };
 
   return (
     <div className={styles.page}>
@@ -35,7 +57,7 @@ export default function AllPortfolioPage() {
           />
         </div>
         <div className={styles.heroBackgroundWord} aria-hidden="true">
-          Environment
+          Environment Artist
         </div>
         <div className={styles.heroCopy}>
           <span className={styles.eyebrow}>3D Environment Artist</span>
@@ -77,32 +99,61 @@ export default function AllPortfolioPage() {
         className={styles.statementSection}
         aria-label="Environment artist statement"
       >
-        <span>About</span>
-        <div className={styles.statementCopy}>
-          <p>
-            좋은 환경은 설명하지 않아도
-            <br />
-            그 공간의 이야기를 전달할 수 있다고 생각합니다.
-          </p>
-          <p>
-            분위기와 구조, 디테일을 통해
-            <br />
-            플레이어가 자연스럽게 세계관에 몰입할 수 있는 공간을 제작합니다.
-          </p>
-          <Link to="/about" className={styles.aboutButton}>
-            Profile
-          </Link>
+        <div className={styles.aboutEditorial}>
+          <span className={styles.aboutLabel}>About</span>
+          <div className={styles.statementCopy}>
+            <p>
+              좋은 환경은 설명하지 않아도
+              <br />
+              그 공간의 이야기를 전달할 수 있다고 생각합니다.
+            </p>
+            <p>
+              분위기와 구조, 디테일을 통해 플레이어가 자연스럽게 세계관에 몰입할 수
+              있는 공간을 제작합니다.
+            </p>
+          </div>
+          <div className={styles.educationBlock}>
+            <span>Education</span>
+            <strong>2023 - 2025 · B.S. Computer Animation</strong>
+            <p>Full Sail University, Florida, USA</p>
+          </div>
         </div>
-        <div className={styles.statementBranding}>
-          <h2>
-            Space Builds
-            <br />
-            The Story.
-          </h2>
-          <a href="mailto:sungyeonlee1350@gmail.com">sungyeonlee1350@gmail.com</a>
-          <small>3D Environment Artist &middot; World Building</small>
+        <div className={styles.profileDetails}>
+          <dl>
+            <div>
+              <dt>Name</dt>
+              <dd>Sungyeon Lee</dd>
+            </div>
+            <div>
+              <dt>Role</dt>
+              <dd>3D Environment Artist</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>
+                <button type="button" className={styles.emailCopyButton} onClick={copyEmail}>
+                  {contactEmail}
+                </button>
+              </dd>
+            </div>
+            <div>
+              <dt>Birth</dt>
+              <dd>2001.11</dd>
+            </div>
+          </dl>
+          <div className={styles.toolsBlock}>
+            <span>Tools</span>
+            <ul>
+              {profileTools.map((tool) => (
+                <li key={tool}>{tool}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
+      <div className={`${styles.toast} ${toastVisible ? styles.toastVisible : ''}`} role="status">
+        Email copied
+      </div>
     </div>
   );
 }

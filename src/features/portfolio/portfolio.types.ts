@@ -13,6 +13,7 @@ export type PortfolioSection =
   | 'relighting';
 
 export type PersonalPortfolioSubcategory = 'Environment' | 'Character' | 'Study';
+export type PortfolioArchiveGroup = 'environmentStudy' | 'substanceDesigner' | 'schoolWorks';
 
 export type MediaType = 'image' | 'video' | 'youtube';
 
@@ -34,6 +35,7 @@ export interface PortfolioMedia {
   youtubeId?: string;
   youtubeStartSeconds?: number;
   title: string;
+  displayLabel?: string;
   alt: string;
   order: number;
   isCountable: boolean;
@@ -47,6 +49,7 @@ export interface PortfolioItem {
   slug: string;
   category: PortfolioCategory;
   personalSubcategory?: PersonalPortfolioSubcategory;
+  archiveGroup?: PortfolioArchiveGroup;
   section: PortfolioSection;
   companyId?: string;
   projectType: string;

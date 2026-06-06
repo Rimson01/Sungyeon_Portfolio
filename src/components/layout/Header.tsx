@@ -3,9 +3,13 @@ import { routes } from '../../app/routes';
 import styles from './Header.module.css';
 
 export default function Header() {
+  const handleBrandClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <header className={styles.header}>
-      <NavLink to="/" className={styles.brand}>
+      <NavLink to="/" className={styles.brand} onClick={handleBrandClick}>
         Sungyeon Lee
       </NavLink>
       <nav className={styles.nav} aria-label="Main navigation">
@@ -21,9 +25,9 @@ export default function Header() {
             {route.label}
           </NavLink>
         ))}
-        <a className={styles.link} href="#contact">
+        <NavLink className={styles.link} to="/#contact">
           Contact
-        </a>
+        </NavLink>
       </nav>
     </header>
   );

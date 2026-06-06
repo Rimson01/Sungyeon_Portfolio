@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef, useState, type WheelEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type WheelEvent } from 'react';
 import type { PortfolioItem, PortfolioMedia } from '../../features/portfolio/portfolio.types';
 import { useViewStats } from '../../features/viewStats/viewStats';
 import { useCategoryLightbox } from './CategoryLightboxProvider';
@@ -16,31 +16,28 @@ export default function CategoryLightbox() {
   } = useCategoryLightbox();
   const { getViewCount, incrementMediaOpen } = useViewStats();
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
+  const [zoomedImageUrl, setZoomedImageUrl] = useState<string | null>(null);
   const mainRef = useRef<HTMLDivElement | null>(null);
-  const videoSectionRef = useRef<HTMLDivElement | null>(null);
-  const gallerySectionRef = useRef<HTMLDivElement | null>(null);
-  const railRef = useRef<HTMLElement | null>(null);
+  const railRef = useRef<HTMLDivElement | null>(null);
   const wheelCooldownRef = useRef<number | null>(null);
-  const snapCooldownRef = useRef<number | null>(null);
+  const railWheelCooldownRef = useRef<number | null>(null);
   const mediaItems = useMemo(
     () => activeItem?.media.filter((media) => media.lightboxEnabled) ?? [],
     [activeItem],
   );
-  const videoMediaItems = useMemo(
-    () => mediaItems.filter((media) => media.type === 'youtube'),
-    [mediaItems],
-  );
-  const imageMediaItems = useMemo(
-    () => mediaItems.filter((media) => media.type === 'image'),
-    [mediaItems],
-  );
-  const selectedMedia = imageMediaItems[selectedMediaIndex];
+  const selectedMedia = mediaItems[selectedMediaIndex];
 
   useEffect(() => {
     if (!activeItem) return undefined;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') closeCategoryLightbox();
+      if (event.key === 'Escape') {
+        if (zoomedImageUrl) {
+          setZoomedImageUrl(null);
+        } else {
+          closeCategoryLightbox();
+        }
+      }
       if (event.key === 'ArrowLeft') showPreviousItem();
       if (event.key === 'ArrowRight') showNextItem();
     };
@@ -52,18 +49,19 @@ export default function CategoryLightbox() {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [activeItem, closeCategoryLightbox, showNextItem, showPreviousItem]);
+  }, [activeItem, closeCategoryLightbox, showNextItem, showPreviousItem, zoomedImageUrl]);
 
   useEffect(() => {
     setSelectedMediaIndex(0);
+    setZoomedImageUrl(null);
     mainRef.current?.scrollTo({ top: 0 });
   }, [activeItem?.id]);
 
   useEffect(() => {
     setSelectedMediaIndex((currentIndex) =>
-      Math.min(currentIndex, Math.max(imageMediaItems.length - 1, 0)),
+      Math.min(currentIndex, Math.max(mediaItems.length - 1, 0)),
     );
-  }, [imageMediaItems.length]);
+  }, [mediaItems.length]);
 
   useEffect(() => {
     if (activeItem) incrementMediaOpen(activeItem, selectedMedia?.id);
@@ -74,20 +72,20 @@ export default function CategoryLightbox() {
       if (wheelCooldownRef.current !== null) {
         window.clearTimeout(wheelCooldownRef.current);
       }
-      if (snapCooldownRef.current !== null) {
-        window.clearTimeout(snapCooldownRef.current);
+      if (railWheelCooldownRef.current !== null) {
+        window.clearTimeout(railWheelCooldownRef.current);
       }
     };
   }, []);
 
   const handleMainMediaWheel = (deltaY: number) => {
-    if (imageMediaItems.length < 2 || deltaY === 0) return;
+    if (mediaItems.length < 2 || deltaY === 0) return;
 
     if (wheelCooldownRef.current !== null) return;
 
     const direction = deltaY > 0 ? 1 : -1;
     setSelectedMediaIndex((currentIndex) =>
-      Math.min(Math.max(currentIndex + direction, 0), imageMediaItems.length - 1),
+      Math.min(Math.max(currentIndex + direction, 0), mediaItems.length - 1),
     );
 
     wheelCooldownRef.current = window.setTimeout(() => {
@@ -95,42 +93,25 @@ export default function CategoryLightbox() {
     }, 220);
   };
 
-  const handleMainSectionWheel = (event: WheelEvent<HTMLDivElement>) => {
-    if (videoMediaItems.length === 0 || event.deltaY === 0) return;
-    if (!mainRef.current || !videoSectionRef.current || !gallerySectionRef.current) return;
+  const handleRailWheel = (event: WheelEvent<HTMLElement>) => {
+    if (mediaItems.length < 2 || event.deltaY === 0) return;
 
-    const target = event.target as HTMLElement;
-    if (target.closest(`.${styles.mediaPreview}`)) return;
-    if (snapCooldownRef.current !== null) {
-      event.preventDefault();
-      return;
-    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (railWheelCooldownRef.current !== null) return;
 
-    const mainBounds = mainRef.current.getBoundingClientRect();
-    const galleryBounds = gallerySectionRef.current.getBoundingClientRect();
-    const galleryOffsetFromTop = galleryBounds.top - mainBounds.top;
-    const isVideoView = galleryOffsetFromTop > mainBounds.height * 0.42;
-    const isGalleryView = Math.abs(galleryOffsetFromTop) < mainBounds.height * 0.32;
+    const direction = event.deltaY > 0 ? 1 : -1;
+    setSelectedMediaIndex((currentIndex) =>
+      Math.min(Math.max(currentIndex + direction, 0), mediaItems.length - 1),
+    );
 
-    if (event.deltaY > 0 && isVideoView) {
-      event.preventDefault();
-      gallerySectionRef.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
-
-    if (event.deltaY < 0 && isGalleryView && mainRef.current.scrollTop <= gallerySectionRef.current.offsetTop + 16) {
-      event.preventDefault();
-      videoSectionRef.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
-    }
-
-    if (event.defaultPrevented) {
-      snapCooldownRef.current = window.setTimeout(() => {
-        snapCooldownRef.current = null;
-      }, 520);
-    }
+    railWheelCooldownRef.current = window.setTimeout(() => {
+      railWheelCooldownRef.current = null;
+    }, 180);
   };
 
   useEffect(() => {
-    if (!railRef.current || imageMediaItems.length === 0) return;
+    if (!railRef.current || mediaItems.length === 0) return;
 
     const activeThumb = railRef.current.querySelector<HTMLButtonElement>(
       `[data-media-index="${selectedMediaIndex}"]`,
@@ -153,7 +134,7 @@ export default function CategoryLightbox() {
         behavior: 'smooth',
       });
     }
-  }, [imageMediaItems.length, selectedMediaIndex]);
+  }, [mediaItems.length, selectedMediaIndex]);
 
   if (!activeItem) return null;
 
@@ -166,7 +147,7 @@ export default function CategoryLightbox() {
         aria-labelledby="category-lightbox-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div ref={mainRef} className={styles.main} onWheel={handleMainSectionWheel}>
+        <div ref={mainRef} className={styles.main}>
           <div className={styles.nav}>
             <button type="button" onClick={closeCategoryLightbox}>
               Close
@@ -176,43 +157,45 @@ export default function CategoryLightbox() {
             </span>
           </div>
 
-          {videoMediaItems.length > 0 ? (
-            <VideoSection ref={videoSectionRef} videos={videoMediaItems} item={activeItem} />
-          ) : null}
-
-          <section ref={gallerySectionRef} className={styles.gallerySection}>
-            <div className={styles.info}>
-              <div className={styles.meta}>
-                <span className={styles.category}>{activeItem.category}</span>
-                <time dateTime={activeItem.publishedAt}>{activeItem.publishedAt}</time>
-                <span className={styles.views}>
-                  {getViewCount(activeItem, selectedMedia?.id)} media opens
-                </span>
-              </div>
-              <h2 id="category-lightbox-title">{activeItem.title}</h2>
-              <p>{activeItem.descriptionHtml}</p>
-            </div>
-
+          <div className={styles.mediaStage}>
             <MediaPreview
               item={activeItem}
               selectedMedia={selectedMedia}
               onWheelDelta={handleMainMediaWheel}
+              onZoom={setZoomedImageUrl}
             />
-
-            <div className={styles.controls} aria-label="Sequential category navigation">
-              <button type="button" onClick={showPreviousItem}>
-                Previous
-              </button>
-              <button type="button" onClick={showNextItem}>
-                Next
-              </button>
-            </div>
-          </section>
+          </div>
+          <div className={styles.controls} aria-label="Sequential category navigation">
+            <button type="button" onClick={showPreviousItem}>
+              Previous
+            </button>
+            <button type="button" onClick={showNextItem}>
+              Next
+            </button>
+          </div>
         </div>
 
-        <aside ref={railRef} className={styles.rail} aria-label={`${activeItem.category} thumbnails`}>
-          {imageMediaItems.length > 0
-            ? imageMediaItems.map((media, index) => (
+        <aside className={styles.sidePanel}>
+          <div className={styles.info}>
+            <div className={styles.meta}>
+              <span className={styles.category}>{activeItem.category}</span>
+              <time dateTime={activeItem.publishedAt}>{activeItem.publishedAt}</time>
+              <span className={styles.views}>
+                {getViewCount(activeItem, selectedMedia?.id)} media opens
+              </span>
+            </div>
+            <h2 id="category-lightbox-title">{activeItem.title}</h2>
+            <p>{activeItem.descriptionHtml}</p>
+            <ProjectFacts item={activeItem} />
+          </div>
+          <div
+            ref={railRef}
+            className={styles.rail}
+            aria-label={`${activeItem.category} thumbnails`}
+            onWheel={handleRailWheel}
+          >
+            {mediaItems.length > 0
+              ? mediaItems.map((media, index) => (
                 <button
                   key={media.id}
                   type="button"
@@ -224,7 +207,7 @@ export default function CategoryLightbox() {
                     <MediaThumbnail media={media} item={activeItem} />
                   </div>
                   <div className={styles.thumbText}>
-                    <strong>{getRailMediaLabel(activeItem, media, imageMediaItems.slice(0, index))}</strong>
+                    <strong>{getRailMediaLabel(activeItem, media, mediaItems.slice(0, index))}</strong>
                   </div>
                 </button>
               ))
@@ -240,8 +223,12 @@ export default function CategoryLightbox() {
                   <small>{item.mediaType}</small>
                 </button>
               ))}
+          </div>
         </aside>
       </section>
+      {zoomedImageUrl ? (
+        <ImageZoomOverlay imageUrl={zoomedImageUrl} onClose={() => setZoomedImageUrl(null)} />
+      ) : null}
     </div>
   );
 }
@@ -250,11 +237,7 @@ interface MediaPreviewProps {
   item: PortfolioItem;
   selectedMedia?: PortfolioItem['media'][number];
   onWheelDelta: (deltaY: number) => void;
-}
-
-interface VideoSectionProps {
-  videos: PortfolioItem['media'];
-  item: PortfolioItem;
+  onZoom: (imageUrl: string) => void;
 }
 
 type MediaWithOptionalSrc = PortfolioMedia & {
@@ -304,6 +287,8 @@ function getRailMediaLabel(
   media: PortfolioMedia,
   previousMedia: PortfolioMedia[],
 ) {
+  if (media.displayLabel) return media.displayLabel;
+
   if (
     item.id === 'personal-military-radio' ||
     item.id === 'personal-fire-place' ||
@@ -312,8 +297,7 @@ function getRailMediaLabel(
     item.id === 'personal-babarian' ||
     item.id === 'personal-android' ||
     item.id === 'personal-zbrush-rock-environment-practice' ||
-    item.id === 'personal-zbrush-study' ||
-    item.id === 'personal-material-study'
+    item.id === 'personal-zbrush-study'
   ) {
     return getMediaDisplayLabel(media, previousMedia);
   }
@@ -350,36 +334,9 @@ function MediaThumbnail({ media, item }: MediaThumbnailProps) {
   );
 }
 
-const VideoSection = forwardRef<HTMLDivElement, VideoSectionProps>(function VideoSection(
-  { videos, item },
-  ref,
-) {
-  const playableVideos = videos.filter((media) => isValidYoutubeId(media.youtubeId));
-
-  if (playableVideos.length === 0) return null;
-
-  return (
-    <div ref={ref} className={styles.videoSection}>
-      {playableVideos.map((media) => (
-        <div
-          key={media.id}
-          className={styles.videoFrame}
-          onMouseDown={(event) => event.stopPropagation()}
-        >
-          <iframe
-            title={`${media.title ?? item.title} video preview`}
-            src={`https://www.youtube.com/embed/${media.youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0${media.youtubeStartSeconds ? `&start=${media.youtubeStartSeconds}` : ''}`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
-      ))}
-    </div>
-  );
-});
-
-function MediaPreview({ item, selectedMedia, onWheelDelta }: MediaPreviewProps) {
+function MediaPreview({ item, selectedMedia, onWheelDelta, onZoom }: MediaPreviewProps) {
   const previewRef = useRef<HTMLDivElement | null>(null);
+  const [videoInteractionEnabled, setVideoInteractionEnabled] = useState(false);
   const primaryMedia = selectedMedia ?? item.media.find((media) => media.type === 'image');
   const mediaType = primaryMedia?.type ?? item.mediaType;
   const youtubeId = primaryMedia?.youtubeId ?? item.youtubeId;
@@ -387,8 +344,14 @@ function MediaPreview({ item, selectedMedia, onWheelDelta }: MediaPreviewProps) 
   const imageUrl = resolveMediaImageUrl(primaryMedia, item);
 
   useEffect(() => {
+    setVideoInteractionEnabled(false);
+  }, [primaryMedia?.id]);
+
+  useEffect(() => {
     const previewElement = previewRef.current;
-    if (!previewElement || mediaType !== 'image') return undefined;
+    const canCaptureWheel =
+      mediaType === 'image' || (mediaType === 'youtube' && !videoInteractionEnabled);
+    if (!previewElement || !canCaptureWheel) return undefined;
 
     const handleWheel = (event: globalThis.WheelEvent) => {
       event.preventDefault();
@@ -401,22 +364,41 @@ function MediaPreview({ item, selectedMedia, onWheelDelta }: MediaPreviewProps) 
     return () => {
       previewElement.removeEventListener('wheel', handleWheel);
     };
-  }, [mediaType, onWheelDelta]);
+  }, [mediaType, onWheelDelta, videoInteractionEnabled]);
 
-  if (mediaType === 'youtube' && isValidYoutubeId(youtubeId)) {
-    return (
-      <div
-        className={styles.youtubePreview}
-        onMouseDown={(event) => event.stopPropagation()}
-      >
-        <iframe
+    if (mediaType === 'youtube' && isValidYoutubeId(youtubeId)) {
+      return (
+        <div
+          ref={previewRef}
+          className={styles.youtubePreview}
+          onMouseDown={(event) => event.stopPropagation()}
+          onMouseLeave={() => setVideoInteractionEnabled(false)}
+        >
+          <iframe
           title={`${mediaTitle} video preview`}
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=0&controls=1&modestbranding=1&rel=0${primaryMedia?.youtubeStartSeconds ? `&start=${primaryMedia.youtubeStartSeconds}` : ''}`}
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0${primaryMedia?.youtubeStartSeconds ? `&start=${primaryMedia.youtubeStartSeconds}` : ''}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        />
-      </div>
-    );
+            allowFullScreen
+          />
+          {!videoInteractionEnabled ? (
+            <div
+              className={styles.videoWheelCapture}
+              role="button"
+              tabIndex={0}
+              aria-label="Scroll to navigate media or click to control the video"
+              onClick={() => setVideoInteractionEnabled(true)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  setVideoInteractionEnabled(true);
+                }
+              }}
+            >
+              <span>Scroll media · Click for video controls</span>
+            </div>
+          ) : null}
+        </div>
+      );
   }
 
   if (mediaType === 'youtube') {
@@ -429,7 +411,59 @@ function MediaPreview({ item, selectedMedia, onWheelDelta }: MediaPreviewProps) 
 
   return (
     <div ref={previewRef} className={styles.mediaPreview}>
-      <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
+      <button
+        type="button"
+        className={styles.zoomTrigger}
+        onClick={() => onZoom(imageUrl)}
+        aria-label="Open image at 200 percent"
+      >
+        <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
+      </button>
+    </div>
+  );
+}
+
+function ProjectFacts({ item }: { item: PortfolioItem }) {
+  const period = item.stats.find((stat) => stat.key === 'Period')?.value;
+  const tools = item.tools.length > 0 ? item.tools.join(' · ') : undefined;
+
+  if (!period && !tools) return null;
+
+  return (
+    <dl className={styles.projectFacts}>
+      {period ? (
+        <div>
+          <dt>Period</dt>
+          <dd>{period}</dd>
+        </div>
+      ) : null}
+      {tools ? (
+        <div>
+          <dt>Tools</dt>
+          <dd>{tools}</dd>
+        </div>
+      ) : null}
+    </dl>
+  );
+}
+
+function ImageZoomOverlay({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) {
+  return (
+    <div
+      className={styles.zoomOverlay}
+      role="dialog"
+      aria-modal="true"
+      onMouseDown={(event) => {
+        event.stopPropagation();
+        onClose();
+      }}
+    >
+      <button type="button" className={styles.zoomClose} onClick={onClose}>
+        Close
+      </button>
+      <div className={styles.zoomViewport} onMouseDown={(event) => event.stopPropagation()}>
+        <img src={imageUrl} alt="Enlarged portfolio render" />
+      </div>
     </div>
   );
 }
