@@ -1,4 +1,4 @@
-# Portfolio v2
+# Sungyeon Portfolio 
 
 React/Vite portfolio scaffold based on Architecture v2. The app is currently using local mock data while the product structure, category flows, ALL Portfolio viewer, mock view counts, and mock rank snapshot are being shaped before Firebase integration.
 
