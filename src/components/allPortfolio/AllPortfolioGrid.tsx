@@ -75,13 +75,19 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
           {section.key === 'environmentStudy' ? (
             <EnvironmentStudyRows items={section.items} onSelect={openItem} />
           ) : (
-            <div className={styles.curatedGrid}>
+            <div
+              className={`${styles.curatedGrid} ${
+                section.key === 'substanceDesigner' ? styles.substanceGrid : styles.schoolGrid
+              }`}
+            >
               {section.items.map((item) => (
                 <AllPortfolioCard
                   key={item.id}
                   item={item}
                   onSelect={openItem}
-                  className={styles.curatedCard}
+                  className={`${styles.curatedCard} ${
+                    section.key === 'substanceDesigner' ? styles.substanceCard : ''
+                  }`}
                 />
               ))}
             </div>

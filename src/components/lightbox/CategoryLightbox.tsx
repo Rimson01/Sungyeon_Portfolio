@@ -415,7 +415,7 @@ function MediaPreview({ item, selectedMedia, onWheelDelta, onZoom }: MediaPrevie
         type="button"
         className={styles.zoomTrigger}
         onClick={() => onZoom(imageUrl)}
-        aria-label="Open image at 200 percent"
+        aria-label="Zoom in on image"
       >
         <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
       </button>
@@ -462,7 +462,14 @@ function ImageZoomOverlay({ imageUrl, onClose }: { imageUrl: string; onClose: ()
         Close
       </button>
       <div className={styles.zoomViewport} onMouseDown={(event) => event.stopPropagation()}>
-        <img src={imageUrl} alt="Enlarged portfolio render" />
+        <button
+          type="button"
+          className={styles.zoomedImageButton}
+          onClick={onClose}
+          aria-label="Zoom out to the project viewer"
+        >
+          <img src={imageUrl} alt="Enlarged portfolio render" />
+        </button>
       </div>
     </div>
   );

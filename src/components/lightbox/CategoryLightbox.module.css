@@ -11,7 +11,7 @@
 
 .lightbox {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 290px);
   width: min(95vw, 1900px);
   height: 95vh;
   max-height: 95vh;
@@ -283,12 +283,12 @@
 .rail {
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: 6px;
   min-height: 0;
   max-height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 12px;
+  padding: 8px;
   background: rgba(255, 255, 255, 0.012);
   scrollbar-color: rgba(51, 170, 255, 0.48) rgba(255, 255, 255, 0.04);
   scrollbar-width: thin;
@@ -298,13 +298,13 @@
 .activeThumb {
   position: relative;
   display: grid;
-  gap: 9px;
+  gap: 5px;
   overflow: visible;
   border: 1px solid var(--color-border);
   background: rgba(14, 14, 14, 0.92);
   color: var(--color-text);
   cursor: pointer;
-  padding: 12px;
+  padding: 7px;
   text-align: left;
 }
 
@@ -360,20 +360,34 @@
   overflow: auto;
 }
 
+.zoomedImageButton {
+  display: grid;
+  width: 100%;
+  min-width: max-content;
+  min-height: 100%;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: zoom-out;
+  padding: clamp(28px, 6vw, 96px);
+}
+
 .zoomViewport img {
   display: block;
-  max-width: 48%;
-  max-height: 48%;
+  max-width: 46%;
+  max-height: 46%;
   object-fit: contain;
-  transform: scale(2);
+  transform: scale(3);
   transform-origin: center;
+  cursor: zoom-out;
 }
 
 .thumbMedia {
   display: grid;
   width: 100%;
   min-height: 0;
-  overflow: visible;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
   place-items: center;
   border: 1px solid var(--color-border);
   background: #050505;
@@ -381,8 +395,9 @@
 
 .thumbMedia img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  object-fit: contain;
   background: #050505;
 }
 
@@ -436,7 +451,7 @@
 .thumb strong,
 .activeThumb strong {
   font-family: var(--font-display);
-  font-size: 19px;
+  font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 0.95;
@@ -466,9 +481,9 @@
 
   .rail {
     grid-auto-flow: column;
-    grid-auto-columns: minmax(150px, 1fr);
-    min-height: 140px;
-    max-height: 180px;
+    grid-auto-columns: minmax(120px, 150px);
+    min-height: 112px;
+    max-height: 138px;
     overflow-x: auto;
     overflow-y: hidden;
     border-top: 1px solid var(--color-border);
@@ -478,13 +493,13 @@
 
   .thumb,
   .activeThumb {
-    min-width: 150px;
-    padding: 8px;
+    min-width: 120px;
+    padding: 6px;
   }
 
   .thumb strong,
   .activeThumb strong {
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .mediaStage {
@@ -508,5 +523,11 @@
 
   .zoomOverlay {
     padding: 12px;
+  }
+
+  .zoomViewport img {
+    max-width: 52%;
+    max-height: 52%;
+    transform: scale(2.5);
   }
 }
