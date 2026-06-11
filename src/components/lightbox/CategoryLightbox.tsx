@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type WheelEvent } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type WheelEvent,
+} from 'react';
 import type { PortfolioItem, PortfolioMedia } from '../../features/portfolio/portfolio.types';
 import { useViewStats } from '../../features/viewStats/viewStats';
 import { useCategoryLightbox } from './CategoryLightboxProvider';
@@ -21,10 +28,18 @@ export default function CategoryLightbox() {
   const railRef = useRef<HTMLDivElement | null>(null);
   const wheelCooldownRef = useRef<number | null>(null);
   const railWheelCooldownRef = useRef<number | null>(null);
-  const mediaItems = useMemo(
-    () => activeItem?.media.filter((media) => media.lightboxEnabled) ?? [],
-    [activeItem],
-  );
+  const mediaItems = useMemo(() => {
+    if (!activeItem) return [];
+
+    if (activeItem.archiveGroup === 'substanceDesigner') {
+      return categoryItems
+        .filter((item) => item.archiveGroup === 'substanceDesigner')
+        .sort((a, b) => a.categoryOrder - b.categoryOrder)
+        .flatMap((item) => item.media.filter((media) => media.lightboxEnabled));
+    }
+
+    return activeItem.media.filter((media) => media.lightboxEnabled);
+  }, [activeItem, categoryItems]);
   const selectedMedia = mediaItems[selectedMediaIndex];
 
   useEffect(() => {
@@ -52,10 +67,18 @@ export default function CategoryLightbox() {
   }, [activeItem, closeCategoryLightbox, showNextItem, showPreviousItem, zoomedImageUrl]);
 
   useEffect(() => {
-    setSelectedMediaIndex(0);
+    const initialMediaIndex =
+      activeItem?.archiveGroup === 'substanceDesigner'
+        ? Math.max(
+            0,
+            mediaItems.findIndex((media) => media.id === activeItem.media[0]?.id),
+          )
+        : 0;
+
+    setSelectedMediaIndex(initialMediaIndex);
     setZoomedImageUrl(null);
     mainRef.current?.scrollTo({ top: 0 });
-  }, [activeItem?.id]);
+  }, [activeItem?.id, mediaItems]);
 
   useEffect(() => {
     setSelectedMediaIndex((currentIndex) =>
@@ -153,7 +176,7 @@ export default function CategoryLightbox() {
               Close
             </button>
             <span>
-              {activeIndex + 1} / {categoryItems.length}
+              {mediaItems.length > 0 ? selectedMediaIndex + 1 : 0} / {mediaItems.length}
             </span>
           </div>
 
@@ -448,6 +471,52 @@ function ProjectFacts({ item }: { item: PortfolioItem }) {
 }
 
 function ImageZoomOverlay({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragState = useRef({
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0,
+    moved: false,
+  });
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    dragState.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: offset.x,
+      originY: offset.y,
+      moved: false,
+    };
+    setIsDragging(true);
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!isDragging || dragState.current.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - dragState.current.startX;
+    const deltaY = event.clientY - dragState.current.startY;
+    if (Math.abs(deltaX) + Math.abs(deltaY) > 6) {
+      dragState.current.moved = true;
+    }
+    setOffset({
+      x: dragState.current.originX + deltaX,
+      y: dragState.current.originY + deltaY,
+    });
+  };
+
+  const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (dragState.current.pointerId !== event.pointerId) return;
+
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    setIsDragging(false);
+    if (!dragState.current.moved) onClose();
+  };
+
   return (
     <div
       className={styles.zoomOverlay}
@@ -462,14 +531,29 @@ function ImageZoomOverlay({ imageUrl, onClose }: { imageUrl: string; onClose: ()
         Close
       </button>
       <div className={styles.zoomViewport} onMouseDown={(event) => event.stopPropagation()}>
-        <button
-          type="button"
-          className={styles.zoomedImageButton}
-          onClick={onClose}
-          aria-label="Zoom out to the project viewer"
+        <div
+          className={`${styles.zoomPanSurface} ${isDragging ? styles.zoomPanDragging : ''}`}
+          role="button"
+          tabIndex={0}
+          aria-label="Drag the enlarged image, or click to zoom out"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={() => setIsDragging(false)}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              onClose();
+            }
+          }}
         >
-          <img src={imageUrl} alt="Enlarged portfolio render" />
-        </button>
+          <img
+            src={imageUrl}
+            alt="Enlarged portfolio render"
+            draggable={false}
+            style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(1.45)` }}
+          />
+        </div>
       </div>
     </div>
   );

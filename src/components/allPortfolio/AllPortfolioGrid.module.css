@@ -150,6 +150,8 @@
 .schoolGrid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   justify-content: center;
+  max-width: none;
+  gap: clamp(6px, 0.8vw, 12px);
 }
 
 .substanceGrid {
@@ -168,6 +170,12 @@
 .substanceCard {
   aspect-ratio: 4 / 3;
   max-height: 360px;
+}
+
+.schoolGrid .curatedCard {
+  aspect-ratio: auto;
+  height: clamp(330px, 23vw, 410px);
+  max-height: none;
 }
 
 @media (max-width: 960px) {
@@ -189,6 +197,10 @@
   .schoolGrid,
   .substanceGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .schoolGrid .curatedCard {
+    height: clamp(280px, 38vw, 380px);
   }
 
   .schoolHeader {
@@ -241,6 +253,11 @@
   .curatedCard {
     aspect-ratio: 4 / 5;
     max-height: none;
+  }
+
+  .schoolGrid .curatedCard {
+    aspect-ratio: 4 / 5;
+    height: auto;
   }
 
   .substanceCard {

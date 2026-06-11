@@ -7,6 +7,15 @@ export default function Header() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSectionClick = (sectionId: string) => {
+    window.requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+      });
+    });
+  };
+
   return (
     <header className={styles.header}>
       <NavLink to="/" className={styles.brand} onClick={handleBrandClick}>
@@ -17,7 +26,8 @@ export default function Header() {
           <NavLink
             key={route.path}
             to={route.path}
-            end={route.path === '/'}
+            end
+            onClick={() => handleSectionClick('work')}
             className={({ isActive }) =>
               isActive ? `${styles.link} ${styles.active}` : styles.link
             }

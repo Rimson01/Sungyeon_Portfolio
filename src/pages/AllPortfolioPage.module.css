@@ -335,6 +335,7 @@
 .worksSection {
   display: grid;
   gap: 6px;
+  scroll-margin-top: 84px;
 }
 
 .worksIntro {
@@ -399,6 +400,12 @@
 
   .worksCopy {
     text-align: left;
+  }
+}
+
+@media (max-width: 760px) {
+  .worksSection {
+    scroll-margin-top: 132px;
   }
 }
 

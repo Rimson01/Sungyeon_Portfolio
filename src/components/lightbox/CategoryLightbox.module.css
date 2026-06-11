@@ -353,33 +353,35 @@
 }
 
 .zoomViewport {
-  display: grid;
-  width: min(92vw, 1500px);
-  height: min(88vh, 1000px);
-  place-items: center;
-  overflow: auto;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.zoomedImageButton {
+.zoomPanSurface {
   display: grid;
   width: 100%;
-  min-width: max-content;
-  min-height: 100%;
+  height: 100%;
   place-items: center;
-  border: 0;
-  background: transparent;
-  cursor: zoom-out;
-  padding: clamp(28px, 6vw, 96px);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
 }
 
-.zoomViewport img {
+.zoomPanDragging {
+  cursor: grabbing;
+}
+
+.zoomPanSurface img {
   display: block;
-  max-width: 46%;
-  max-height: 46%;
+  max-width: 92vw;
+  max-height: 92vh;
   object-fit: contain;
-  transform: scale(3);
   transform-origin: center;
-  cursor: zoom-out;
+  cursor: inherit;
+  pointer-events: none;
+  will-change: transform;
 }
 
 .thumbMedia {
@@ -525,9 +527,8 @@
     padding: 12px;
   }
 
-  .zoomViewport img {
-    max-width: 52%;
-    max-height: 52%;
-    transform: scale(2.5);
+  .zoomPanSurface img {
+    max-width: 94vw;
+    max-height: 86vh;
   }
 }

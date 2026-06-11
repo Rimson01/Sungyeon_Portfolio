@@ -81,7 +81,7 @@ export default function AllPortfolioPage() {
         </div>
       </section>
 
-      <section className={styles.worksSection} aria-labelledby="works-title">
+      <section id="work" className={styles.worksSection} aria-labelledby="works-title">
         <div className={styles.worksIntro}>
           <div>
             <h2 id="works-title">WORKS</h2>
