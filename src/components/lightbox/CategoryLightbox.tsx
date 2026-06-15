@@ -16,6 +16,7 @@ export default function CategoryLightbox() {
     activeItem,
     categoryItems,
     activeIndex,
+    initialMediaId,
     closeCategoryLightbox,
     selectCategoryItem,
     showPreviousItem,
@@ -67,18 +68,17 @@ export default function CategoryLightbox() {
   }, [activeItem, closeCategoryLightbox, showNextItem, showPreviousItem, zoomedImageUrl]);
 
   useEffect(() => {
-    const initialMediaIndex =
-      activeItem?.archiveGroup === 'substanceDesigner'
-        ? Math.max(
-            0,
-            mediaItems.findIndex((media) => media.id === activeItem.media[0]?.id),
-          )
-        : 0;
+    const requestedMediaId =
+      initialMediaId ??
+      (activeItem?.archiveGroup === 'substanceDesigner' ? activeItem.media[0]?.id : undefined);
+    const initialMediaIndex = requestedMediaId
+      ? Math.max(0, mediaItems.findIndex((media) => media.id === requestedMediaId))
+      : 0;
 
     setSelectedMediaIndex(initialMediaIndex);
     setZoomedImageUrl(null);
     mainRef.current?.scrollTo({ top: 0 });
-  }, [activeItem?.id, mediaItems]);
+  }, [activeItem?.id, initialMediaId, mediaItems]);
 
   useEffect(() => {
     setSelectedMediaIndex((currentIndex) =>
@@ -357,7 +357,12 @@ function MediaThumbnail({ media, item }: MediaThumbnailProps) {
   );
 }
 
-function MediaPreview({ item, selectedMedia, onWheelDelta, onZoom }: MediaPreviewProps) {
+function MediaPreview({
+  item,
+  selectedMedia,
+  onWheelDelta,
+  onZoom,
+}: MediaPreviewProps) {
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [videoInteractionEnabled, setVideoInteractionEnabled] = useState(false);
   const primaryMedia = selectedMedia ?? item.media.find((media) => media.type === 'image');
@@ -434,21 +439,21 @@ function MediaPreview({ item, selectedMedia, onWheelDelta, onZoom }: MediaPrevie
 
   return (
     <div ref={previewRef} className={styles.mediaPreview}>
+      <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
       <button
         type="button"
         className={styles.zoomTrigger}
         onClick={() => onZoom(imageUrl)}
         aria-label="Zoom in on image"
-      >
-        <img src={imageUrl} alt={primaryMedia?.alt ?? item.title} />
-      </button>
+      />
     </div>
   );
 }
 
 function ProjectFacts({ item }: { item: PortfolioItem }) {
   const period = item.stats.find((stat) => stat.key === 'Period')?.value;
-  const tools = item.tools.length > 0 ? item.tools.join(' · ') : undefined;
+  const tools =
+    item.tools.length > 0 ? item.tools.map(formatToolName).join(' · ') : undefined;
 
   if (!period && !tools) return null;
 
@@ -468,6 +473,21 @@ function ProjectFacts({ item }: { item: PortfolioItem }) {
       ) : null}
     </dl>
   );
+}
+
+function formatToolName(tool: string) {
+  const normalizedNames: Record<string, string> = {
+    '3DS MAX': '3ds Max',
+    MARMOSET: 'Marmoset Toolbag',
+    MAYA: 'Maya',
+    'RIZOM UV': 'RizomUV',
+    'SUBSTANCE DESIGNER': 'Substance Designer',
+    'SUBSTANCE PAINTER': 'Substance Painter',
+    UE5: 'Unreal Engine 5',
+    ZBRUSH: 'ZBrush',
+  };
+
+  return normalizedNames[tool.toUpperCase()] ?? tool;
 }
 
 function ImageZoomOverlay({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) {
@@ -551,7 +571,7 @@ function ImageZoomOverlay({ imageUrl, onClose }: { imageUrl: string; onClose: ()
             src={imageUrl}
             alt="Enlarged portfolio render"
             draggable={false}
-            style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(1.45)` }}
+            style={{ transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(2.8)` }}
           />
         </div>
       </div>

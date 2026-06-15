@@ -11,13 +11,19 @@ import type { PortfolioItem } from '../../features/portfolio/portfolio.types';
 interface CategoryLightboxState {
   items: PortfolioItem[];
   activeIndex: number;
+  initialMediaId?: string;
 }
 
 interface CategoryLightboxContextValue {
   activeItem: PortfolioItem | null;
   categoryItems: PortfolioItem[];
   activeIndex: number;
-  openCategoryLightbox: (item: PortfolioItem, sourceItems: PortfolioItem[]) => void;
+  initialMediaId?: string;
+  openCategoryLightbox: (
+    item: PortfolioItem,
+    sourceItems: PortfolioItem[],
+    initialMediaId?: string,
+  ) => void;
   closeCategoryLightbox: () => void;
   selectCategoryItem: (index: number) => void;
   showPreviousItem: () => void;
@@ -29,17 +35,20 @@ const CategoryLightboxContext = createContext<CategoryLightboxContextValue | nul
 export function CategoryLightboxProvider({ children }: PropsWithChildren) {
   const [state, setState] = useState<CategoryLightboxState | null>(null);
 
-  const openCategoryLightbox = useCallback((item: PortfolioItem, sourceItems: PortfolioItem[]) => {
-    const categoryItems = sourceItems
-      .filter((sourceItem) => sourceItem.category === item.category)
-      .sort((a, b) => a.categoryOrder - b.categoryOrder);
-    const activeIndex = Math.max(
-      0,
-      categoryItems.findIndex((categoryItem) => categoryItem.id === item.id),
-    );
+  const openCategoryLightbox = useCallback(
+    (item: PortfolioItem, sourceItems: PortfolioItem[], initialMediaId?: string) => {
+      const categoryItems = sourceItems
+        .filter((sourceItem) => sourceItem.category === item.category)
+        .sort((a, b) => a.categoryOrder - b.categoryOrder);
+      const activeIndex = Math.max(
+        0,
+        categoryItems.findIndex((categoryItem) => categoryItem.id === item.id),
+      );
 
-    setState({ items: categoryItems, activeIndex });
-  }, []);
+      setState({ items: categoryItems, activeIndex, initialMediaId });
+    },
+    [],
+  );
 
   const closeCategoryLightbox = useCallback(() => setState(null), []);
 
@@ -49,6 +58,7 @@ export function CategoryLightboxProvider({ children }: PropsWithChildren) {
       return {
         ...current,
         activeIndex: Math.min(Math.max(index, 0), current.items.length - 1),
+        initialMediaId: undefined,
       };
     });
   }, []);
@@ -57,7 +67,7 @@ export function CategoryLightboxProvider({ children }: PropsWithChildren) {
     setState((current) => {
       if (!current || current.items.length === 0) return current;
       const activeIndex = (current.activeIndex - 1 + current.items.length) % current.items.length;
-      return { ...current, activeIndex };
+      return { ...current, activeIndex, initialMediaId: undefined };
     });
   }, []);
 
@@ -65,7 +75,7 @@ export function CategoryLightboxProvider({ children }: PropsWithChildren) {
     setState((current) => {
       if (!current || current.items.length === 0) return current;
       const activeIndex = (current.activeIndex + 1) % current.items.length;
-      return { ...current, activeIndex };
+      return { ...current, activeIndex, initialMediaId: undefined };
     });
   }, []);
 
@@ -77,6 +87,7 @@ export function CategoryLightboxProvider({ children }: PropsWithChildren) {
       activeItem,
       categoryItems,
       activeIndex: state?.activeIndex ?? 0,
+      initialMediaId: state?.initialMediaId,
       openCategoryLightbox,
       closeCategoryLightbox,
       selectCategoryItem,

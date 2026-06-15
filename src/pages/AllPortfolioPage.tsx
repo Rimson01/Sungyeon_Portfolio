@@ -45,6 +45,10 @@ export default function AllPortfolioPage() {
     window.setTimeout(() => setToastVisible(false), 1800);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className={styles.page}>
       <section className={styles.hero} aria-labelledby="archive-hero-title">
@@ -151,6 +155,11 @@ export default function AllPortfolioPage() {
           </div>
         </div>
       </section>
+      <div className={styles.backToTopWrap}>
+        <button type="button" className={styles.backToTop} onClick={scrollToTop}>
+          Back to top
+        </button>
+      </div>
       <div className={`${styles.toast} ${toastVisible ? styles.toastVisible : ''}`} role="status">
         Email copied
       </div>

@@ -349,7 +349,7 @@
 .worksIntro h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(82px, 12vw, 172px);
+  font-size: clamp(68px, 9vw, 140px);
   font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 0.78;
@@ -376,6 +376,30 @@
   color: var(--color-muted);
   font-size: 13px;
   line-height: 1.5;
+}
+
+.backToTopWrap {
+  display: flex;
+  justify-content: center;
+  padding: 8px clamp(18px, 3vw, 42px) 32px;
+}
+
+.backToTop {
+  border: 1px solid rgba(51, 170, 255, 0.3);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  padding: 9px 12px;
+  text-transform: uppercase;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.backToTop:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 @media (max-width: 860px) {

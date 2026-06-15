@@ -495,7 +495,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
 모델링, 텍스처링, 라이팅을 통해 따뜻한 분위기의 공간을 구성했습니다.
 
 제작 기간 : ${firePlaceImport.period}`,
-    tools: [...firePlaceImport.tools],
+    tools: ['3ds Max', 'ZBrush', 'Substance Painter', 'Unreal Engine 5'],
     role: 'Full Pipeline',
     year: 2026,
     publishedAt: '2026-03-31',
@@ -570,7 +570,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
 하드서피스 구조와 조명 분위기를 중심으로 공간의 깊이감과 재질감을 구성했습니다.
 
 제작 기간 : ${sciFiCorridorImport.period}`,
-    tools: [...sciFiCorridorImport.tools],
+    tools: ['3ds Max', 'Substance Painter', 'Unreal Engine 5'],
     role: 'Full Pipeline',
     year: 2025,
     publishedAt: '2025-09-30',
@@ -608,7 +608,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
 원작 컨셉 아트를 기반으로 실시간 게임 아트 스타일로 구현.
 
 제작 기간 : ${headHunterImport.period}`,
-    tools: [...headHunterImport.tools],
+    tools: ['Maya', 'ZBrush', 'Marvelous Designer', 'Substance Painter', 'Marmoset Toolbag'],
     role: 'Full Pipeline',
     year: 2025,
     publishedAt: '2025-02-28',
@@ -645,7 +645,7 @@ export const mockPortfolioItems: PortfolioItem[] = [
 원작 컨셉 아트를 기반으로 캐릭터의 실루엣, 의상 구조, 재질 표현을 중심으로 제작했습니다.
 
 제작 기간 : ${barbarianImport.period}`,
-    tools: [...barbarianImport.tools],
+    tools: ['Maya', 'ZBrush', 'Marvelous Designer', 'Substance Painter', 'Marmoset Toolbag'],
     role: 'Full Pipeline',
     year: 2025,
     publishedAt: '2025-01-31',
@@ -682,7 +682,7 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
 실루엣과 기계적 디테일 표현에 집중하여 제작했습니다.
 
 제작 기간 : ${androidImport.period}`,
-    tools: [...androidImport.tools],
+    tools: ['Maya', 'Substance Painter', 'Marmoset Toolbag'],
     role: 'Full Pipeline',
     year: 2024,
     publishedAt: '2024-10-31',
@@ -721,7 +721,7 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
 바위 형태의 실루엣, 면 흐름, 표면 디테일 표현을 중심으로 제작했습니다.
 
 제작 기간 : ${zbrushRockEnvironmentImport.period}`,
-    tools: [...zbrushRockEnvironmentImport.tools],
+    tools: ['ZBrush', 'Substance Painter', 'Unreal Engine 5'],
     role: 'Asset Study',
     year: 2026,
     publishedAt: '2026-04-30',

@@ -74,20 +74,21 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
           )}
           {section.key === 'environmentStudy' ? (
             <EnvironmentStudyRows items={section.items} onSelect={openItem} />
+          ) : section.key === 'substanceDesigner' ? (
+            <SubstanceImageGrid
+              items={section.items}
+              onSelect={(item, mediaId) =>
+                openCategoryLightbox(item, publishedItems, mediaId)
+              }
+            />
           ) : (
-            <div
-              className={`${styles.curatedGrid} ${
-                section.key === 'substanceDesigner' ? styles.substanceGrid : styles.schoolGrid
-              }`}
-            >
+            <div className={`${styles.curatedGrid} ${styles.schoolGrid}`}>
               {section.items.map((item) => (
                 <AllPortfolioCard
                   key={item.id}
                   item={item}
                   onSelect={openItem}
-                  className={`${styles.curatedCard} ${
-                    section.key === 'substanceDesigner' ? styles.substanceCard : ''
-                  }`}
+                  className={styles.curatedCard}
                 />
               ))}
             </div>
@@ -98,9 +99,54 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
   );
 }
 
+function SubstanceImageGrid({
+  items,
+  onSelect,
+}: {
+  items: PortfolioItem[];
+  onSelect: (item: PortfolioItem, mediaId: string) => void;
+}) {
+  const entries = items.flatMap((item) =>
+    item.media
+      .filter((media) => media.type === 'image' && media.lightboxEnabled)
+      .map((media) => ({ item, media })),
+  );
+
+  return (
+    <div className={`${styles.curatedGrid} ${styles.substanceGrid}`}>
+      {entries.map(({ item, media }) => {
+        const displayItem: PortfolioItem = {
+          ...item,
+          id: `${item.id}-${media.id}`,
+          title: media.displayLabel ?? media.title,
+          thumbnailUrl: media.thumbnailUrl ?? media.url ?? item.thumbnailUrl,
+        };
+
+        return (
+          <AllPortfolioCard
+            key={media.id}
+            item={displayItem}
+            onSelect={() => onSelect(item, media.id)}
+            className={`${styles.curatedCard} ${styles.substanceCard}`}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function EditorialHeader({ section }: { section: ArchiveSection }) {
   const titleWords = section.title.split(' ');
   const accentWord = titleWords.pop();
+  const itemCount =
+    section.key === 'substanceDesigner'
+      ? section.items.reduce(
+          (count, item) =>
+            count +
+            item.media.filter((media) => media.type === 'image' && media.lightboxEnabled).length,
+          0,
+        )
+      : section.items.length;
 
   return (
     <div className={styles.schoolHeader}>
@@ -112,7 +158,7 @@ function EditorialHeader({ section }: { section: ArchiveSection }) {
       </div>
       <div className={styles.schoolRule} aria-hidden="true" />
       <div className={styles.schoolMeta}>
-        <strong>{section.items.length} Projects</strong>
+        <strong>{itemCount} Projects</strong>
         <p>{section.description}</p>
       </div>
     </div>
