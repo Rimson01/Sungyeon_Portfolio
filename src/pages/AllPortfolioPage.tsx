@@ -8,6 +8,7 @@ const realArchiveItemIds = [
   'personal-military-radio',
   'personal-fire-place',
   'personal-sci-fi-corridor',
+  'personal-old-carriage',
   'personal-zbrush-rock-environment-practice',
   'personal-zbrush-study',
   'personal-material-fabric',

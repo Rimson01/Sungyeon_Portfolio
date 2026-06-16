@@ -402,6 +402,61 @@ const militaryRadioMedia = [
   })),
 ];
 
+const publicAssetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
+const oldCarriageImageFiles = [
+  'carriage-render-01.png',
+  'carriage-render-03.png',
+  'carriage-render-04.png',
+  'carriage-render-05.png',
+  'carriage-render-06.png',
+  'carriage-render-07.png',
+  'carriage-render-08.png',
+  'carriage-render-09.png',
+  'carriage-render-10.png',
+  'carriage-render-11.png',
+];
+
+const oldCarriageImageMedia = oldCarriageImageFiles.map((fileName, index) => {
+  const order = index + 1;
+  const paddedOrder = String(order).padStart(2, '0');
+  const label = `Carriage Render ${paddedOrder}`;
+  const url = publicAssetUrl(`portfolio/old-carriage/${fileName}`);
+
+  return {
+    id: `old-carriage-render-${paddedOrder}`,
+    type: 'image' as const,
+    url,
+    thumbnailUrl: url,
+    title: label,
+    alt: label,
+    displayLabel: label,
+    order,
+    isCountable: true,
+    lightboxEnabled: true,
+  };
+});
+
+const oldCarriageYoutubeId = 'PleCKCOQFsw';
+const oldCarriageMedia = [
+  {
+    id: 'old-carriage-youtube-01',
+    type: 'youtube' as const,
+    youtubeId: oldCarriageYoutubeId,
+    thumbnailUrl: `https://img.youtube.com/vi/${oldCarriageYoutubeId}/hqdefault.jpg`,
+    title: 'Old Carriage Video',
+    alt: 'Old Carriage Video',
+    displayLabel: 'Old Carriage Video',
+    order: 1,
+    isCountable: true,
+    lightboxEnabled: true,
+  },
+  ...oldCarriageImageMedia.map((media, index) => ({
+    ...media,
+    order: index + 2,
+  })),
+];
+
 export const mockCompanies: Company[] = [
   {
     id: 'studio-a',
@@ -591,6 +646,45 @@ export const mockPortfolioItems: PortfolioItem[] = [
       { key: 'Source', value: 'Wix import draft' },
     ],
     media: sciFiCorridorMedia,
+  },
+  {
+    id: 'personal-old-carriage',
+    title: 'Old Carriage',
+    subtitle: 'Personal Work',
+    slug: 'old-carriage',
+    category: 'PERSONAL',
+    personalSubcategory: 'Environment',
+    section: 'personalWorks',
+    projectType: 'Environment',
+    descriptionHtml: `서부 협곡 분위기를 기반으로 제작한 올드 캐리지 환경 작업입니다.
+마차 에셋과 주변 배경을 구성하고, 실시간 렌더 기반으로 재질과 라이팅을 정리했습니다.
+
+제작 기간 : 2026.04 ~ 2026.06`,
+    tools: ['3ds Max', 'ZBrush', 'Substance Painter', 'Unreal Engine 5'],
+    role: 'Full Pipeline',
+    year: 2026,
+    publishedAt: '2026-06-16',
+    uploadedAt: '2026-06-16',
+    isPublished: true,
+    isFeatured: true,
+    thumbnailUrl: oldCarriageImageMedia[0].url,
+    hoverUrl: oldCarriageImageMedia[2]?.url,
+    youtubeId: oldCarriageYoutubeId,
+    mediaType: 'image',
+    order: 4,
+    allOrder: 5.5,
+    categoryOrder: 4,
+    lightboxGroupId: 'PERSONAL',
+    chips: [
+      { label: 'Environment', highlighted: true },
+      { label: 'UE5', highlighted: true },
+    ],
+    stats: [
+      { key: 'Period', value: '2026.04 ~ 2026.06' },
+      { key: 'Renders', value: '10 Images' },
+      { key: 'Source', value: 'Local render import' },
+    ],
+    media: oldCarriageMedia,
   },
   {
     id: 'personal-head-hunter',
