@@ -1,8 +1,10 @@
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type PointerEvent as ReactPointerEvent,
   type WheelEvent,
 } from 'react';
@@ -292,8 +294,25 @@ function resolveMediaThumbnailCandidates(media: PortfolioMedia | undefined, item
   return [resolveMediaImageUrl(media, item)].filter((url): url is string => Boolean(url));
 }
 
-function isValidYoutubeId(youtubeId: string | undefined) {
+function isValidYoutubeId(youtubeId: string | undefined): youtubeId is string {
   return Boolean(youtubeId && /^[\w-]{6,}$/.test(youtubeId));
+}
+
+function buildYoutubeEmbedUrl(youtubeId: string, startSeconds?: number) {
+  const params = new URLSearchParams({
+    autoplay: '1',
+    mute: '1',
+    playsinline: '1',
+    controls: '1',
+    modestbranding: '1',
+    rel: '0',
+  });
+
+  if (startSeconds) {
+    params.set('start', String(startSeconds));
+  }
+
+  return `https://www.youtube.com/embed/${youtubeId}?${params.toString()}`;
 }
 
 function getMediaDisplayLabel(media: PortfolioMedia, previousMedia: PortfolioMedia[]) {
@@ -365,6 +384,8 @@ function MediaPreview({
 }: MediaPreviewProps) {
   const previewRef = useRef<HTMLDivElement | null>(null);
   const [videoInteractionEnabled, setVideoInteractionEnabled] = useState(false);
+  const [useFullHdPlayer, setUseFullHdPlayer] = useState(false);
+  const [youtubeScale, setYoutubeScale] = useState(1);
   const primaryMedia = selectedMedia ?? item.media.find((media) => media.type === 'image');
   const mediaType = primaryMedia?.type ?? item.mediaType;
   const youtubeId = primaryMedia?.youtubeId ?? item.youtubeId;
@@ -374,6 +395,25 @@ function MediaPreview({
   useEffect(() => {
     setVideoInteractionEnabled(false);
   }, [primaryMedia?.id]);
+
+  useLayoutEffect(() => {
+    const previewElement = previewRef.current;
+    if (!previewElement || mediaType !== 'youtube') return undefined;
+
+    const updatePlayerSize = () => {
+      const width = previewElement.clientWidth;
+      const shouldUseFullHdPlayer = width >= 960;
+
+      setUseFullHdPlayer(shouldUseFullHdPlayer);
+      setYoutubeScale(shouldUseFullHdPlayer ? width / 1920 : 1);
+    };
+
+    updatePlayerSize();
+    const resizeObserver = new ResizeObserver(updatePlayerSize);
+    resizeObserver.observe(previewElement);
+
+    return () => resizeObserver.disconnect();
+  }, [mediaType, primaryMedia?.id]);
 
   useEffect(() => {
     const previewElement = previewRef.current;
@@ -403,9 +443,17 @@ function MediaPreview({
           onMouseLeave={() => setVideoInteractionEnabled(false)}
         >
           <iframe
-          title={`${mediaTitle} video preview`}
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&playsinline=1&controls=1&modestbranding=1&rel=0${primaryMedia?.youtubeStartSeconds ? `&start=${primaryMedia.youtubeStartSeconds}` : ''}`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            title={`${mediaTitle} video preview`}
+            className={useFullHdPlayer ? styles.youtubeFullHdFrame : undefined}
+            style={
+              useFullHdPlayer
+                ? ({ '--youtube-scale': youtubeScale } as CSSProperties)
+                : undefined
+            }
+            width={useFullHdPlayer ? 1920 : undefined}
+            height={useFullHdPlayer ? 1080 : undefined}
+            src={buildYoutubeEmbedUrl(youtubeId, primaryMedia?.youtubeStartSeconds)}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
           {!videoInteractionEnabled ? (

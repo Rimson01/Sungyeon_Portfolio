@@ -177,12 +177,8 @@ function EnvironmentStudyRows({ items, onSelect }: EnvironmentStudyRowsProps) {
       items: items.slice(0, 3),
     },
     {
-      className: styles.studyFeatureRow,
-      items: items.slice(3, 5),
-    },
-    {
-      className: styles.materialRow,
-      items: items.slice(5, 6),
+      className: styles.environmentRow,
+      items: items.slice(3, 6),
     },
   ].filter((row) => row.items.length > 0);
 

@@ -133,9 +133,21 @@
   border: 0;
 }
 
+.youtubePreview .youtubeFullHdFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  max-width: none;
+  max-height: none;
+  transform: scale(var(--youtube-scale));
+  transform-origin: top left;
+}
+
 .youtubePreview {
   aspect-ratio: 16 / 9;
-  width: min(100%, 1280px);
+  width: min(100%, 1920px);
   max-height: 100%;
   margin: 0 auto;
   border: 1px solid rgba(221, 216, 204, 0.1);
