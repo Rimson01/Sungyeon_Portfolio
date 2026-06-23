@@ -38,13 +38,41 @@
   pointer-events: none;
 }
 
+.heroPlayerMount,
 .heroVideo iframe {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
   filter: brightness(0.96) contrast(1.04) saturate(0.98);
+  opacity: 0;
   pointer-events: none;
   transform: scale(1.14);
+  transition: opacity 520ms ease;
+}
+
+.heroVideoPlaying iframe {
+  opacity: 1;
+}
+
+.heroPoster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.96) contrast(1.04) saturate(0.98);
+  opacity: 1;
+  pointer-events: none;
+  transform: scale(1.14);
+  transition: opacity 520ms ease;
+}
+
+.heroVideoPlaying .heroPoster {
+  opacity: 0;
 }
 
 .heroBackgroundWord {
@@ -138,6 +166,34 @@
   letter-spacing: 0.14em;
   padding: 7px 9px;
   text-transform: uppercase;
+}
+
+.heroProject {
+  position: absolute;
+  right: clamp(18px, 3vw, 42px);
+  bottom: clamp(20px, 3vw, 38px);
+  z-index: 3;
+  display: grid;
+  gap: 5px;
+  max-width: min(320px, 42vw);
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.heroProject span {
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+}
+
+.heroProject strong {
+  color: rgba(221, 216, 204, 0.84);
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.4vw, 38px);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 0.9;
 }
 
 .statementSection {
@@ -476,5 +532,15 @@
 
   .hero p span::before {
     margin-right: 10px;
+  }
+
+  .heroProject {
+    right: 10px;
+    bottom: 58px;
+    max-width: 48vw;
+  }
+
+  .heroProject strong {
+    font-size: 20px;
   }
 }

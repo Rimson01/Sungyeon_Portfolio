@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AllPortfolioGrid from '../components/allPortfolio/AllPortfolioGrid';
 import { mockPortfolioItems } from '../data/mockPortfolio';
 import type { PortfolioItem } from '../features/portfolio/portfolio.types';
@@ -19,7 +19,13 @@ const realArchiveItemIds = [
   'personal-android',
 ] as const;
 
-const heroVideoId = 'P4280Zo8gP0';
+const heroVideoWeights = [
+  { itemId: 'personal-old-carriage', weight: 5 },
+  { itemId: 'personal-fire-place', weight: 4 },
+  { itemId: 'personal-military-radio', weight: 3 },
+  { itemId: 'personal-sci-fi-corridor', weight: 2 },
+] as const;
+
 const contactEmail = 'sungyeonlee1350@gmail.com';
 const profileTools = [
   '3ds Max',
@@ -34,8 +40,184 @@ const profileTools = [
   'Nuke',
 ];
 
+interface HeroVideo {
+  id: string;
+  title: string;
+  posterUrl: string;
+}
+
+interface YouTubePlayer {
+  destroy: () => void;
+  mute: () => void;
+  playVideo: () => void;
+}
+
+interface YouTubePlayerEvent {
+  target: YouTubePlayer;
+}
+
+interface YouTubePlayerStateEvent extends YouTubePlayerEvent {
+  data: number;
+}
+
+interface YouTubeApi {
+  Player: new (
+    element: HTMLElement,
+    options: {
+      videoId: string;
+      playerVars: Record<string, number | string>;
+      events: {
+        onReady: (event: YouTubePlayerEvent) => void;
+        onStateChange: (event: YouTubePlayerStateEvent) => void;
+      };
+    },
+  ) => YouTubePlayer;
+  PlayerState: {
+    PLAYING: number;
+  };
+}
+
+declare global {
+  interface Window {
+    YT?: YouTubeApi;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
+
+let youtubeApiPromise: Promise<YouTubeApi> | null = null;
+
+function loadYouTubeApi() {
+  if (window.YT) return Promise.resolve(window.YT);
+  if (youtubeApiPromise) return youtubeApiPromise;
+
+  youtubeApiPromise = new Promise<YouTubeApi>((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://www.youtube.com/iframe_api"]',
+    );
+    const previousReadyHandler = window.onYouTubeIframeAPIReady;
+
+    window.onYouTubeIframeAPIReady = () => {
+      previousReadyHandler?.();
+      if (window.YT) resolve(window.YT);
+    };
+
+    const script = existingScript ?? document.createElement('script');
+    if (!existingScript) {
+      script.src = 'https://www.youtube.com/iframe_api';
+      script.async = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener('error', () => reject(new Error('YouTube API failed to load')), {
+      once: true,
+    });
+  });
+
+  return youtubeApiPromise;
+}
+
+function selectWeightedHeroVideo(): HeroVideo {
+  const candidates = heroVideoWeights.flatMap(({ itemId, weight }) => {
+      const item = mockPortfolioItems.find((portfolioItem) => portfolioItem.id === itemId);
+
+      return item?.youtubeId
+        ? [{
+            id: item.youtubeId,
+            title: item.title,
+            posterUrl: item.thumbnailUrl,
+            weight,
+          }]
+        : [];
+    });
+
+  const totalWeight = candidates.reduce((sum, candidate) => sum + candidate.weight, 0);
+  let draw = Math.random() * totalWeight;
+
+  for (const candidate of candidates) {
+    draw -= candidate.weight;
+    if (draw < 0) {
+      return {
+        id: candidate.id,
+        title: candidate.title,
+        posterUrl: candidate.posterUrl,
+      };
+    }
+  }
+
+  const fallback = candidates[0];
+  return fallback
+    ? { id: fallback.id, title: fallback.title, posterUrl: fallback.posterUrl }
+    : {
+        id: 'P4280Zo8gP0',
+        title: 'Military Radio',
+        posterUrl: 'https://img.youtube.com/vi/P4280Zo8gP0/maxresdefault.jpg',
+      };
+}
+
+function HeroVideoBackground({ video }: { video: HeroVideo }) {
+  const playerMountRef = useRef<HTMLDivElement | null>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setIsPlaying(false);
+
+    loadYouTubeApi()
+      .then((youtubeApi) => {
+        if (cancelled || !playerMountRef.current) return;
+
+        playerRef.current = new youtubeApi.Player(playerMountRef.current, {
+          videoId: video.id,
+          playerVars: {
+            autoplay: 1,
+            mute: 1,
+            loop: 1,
+            playlist: video.id,
+            playsinline: 1,
+            controls: 0,
+            modestbranding: 1,
+            rel: 0,
+            disablekb: 1,
+            fs: 0,
+          },
+          events: {
+            onReady: (event) => {
+              event.target.mute();
+              event.target.playVideo();
+            },
+            onStateChange: (event) => {
+              if (event.data === youtubeApi.PlayerState.PLAYING) {
+                setIsPlaying(true);
+              }
+            },
+          },
+        });
+      })
+      .catch(() => {
+        setIsPlaying(false);
+      });
+
+    return () => {
+      cancelled = true;
+      playerRef.current?.destroy();
+      playerRef.current = null;
+    };
+  }, [video.id]);
+
+  return (
+    <div
+      className={`${styles.heroVideo} ${isPlaying ? styles.heroVideoPlaying : ''}`}
+      aria-hidden="true"
+    >
+      <div ref={playerMountRef} className={styles.heroPlayerMount} />
+      <img className={styles.heroPoster} src={video.posterUrl} alt="" />
+    </div>
+  );
+}
+
 export default function AllPortfolioPage() {
   const [toastVisible, setToastVisible] = useState(false);
+  const [heroVideo] = useState(selectWeightedHeroVideo);
   const items = realArchiveItemIds
     .map((itemId) => mockPortfolioItems.find((item) => item.id === itemId))
     .filter((item): item is PortfolioItem => Boolean(item));
@@ -53,14 +235,7 @@ export default function AllPortfolioPage() {
   return (
     <div className={styles.page}>
       <section className={styles.hero} aria-labelledby="archive-hero-title">
-        <div className={styles.heroVideo} aria-hidden="true">
-          <iframe
-            title="Military Radio background video"
-            src={`https://www.youtube.com/embed/${heroVideoId}?autoplay=1&mute=1&loop=1&playlist=${heroVideoId}&playsinline=1&controls=0&modestbranding=1&rel=0&disablekb=1&fs=0`}
-            allow="autoplay; encrypted-media; picture-in-picture"
-            tabIndex={-1}
-          />
-        </div>
+        <HeroVideoBackground video={heroVideo} />
         <div className={styles.heroBackgroundWord} aria-hidden="true">
           Environment Artist
         </div>
@@ -83,6 +258,10 @@ export default function AllPortfolioPage() {
           <span>ZBrush</span>
           <span>Substance</span>
           <span>Marmoset</span>
+        </div>
+        <div className={styles.heroProject}>
+          <span>Featured Film</span>
+          <strong>{heroVideo.title}</strong>
         </div>
       </section>
 

@@ -171,14 +171,31 @@ interface EnvironmentStudyRowsProps {
 }
 
 function EnvironmentStudyRows({ items, onSelect }: EnvironmentStudyRowsProps) {
+  const itemsById = new Map(items.map((item) => [item.id, item]));
+  const selectItems = (itemIds: string[]) =>
+    itemIds
+      .map((itemId) => itemsById.get(itemId))
+      .filter((item): item is PortfolioItem => Boolean(item));
+
   const rows = [
     {
-      className: styles.environmentRow,
-      items: items.slice(0, 3),
+      className: styles.featuredRow,
+      items: selectItems(['personal-old-carriage']),
     },
     {
       className: styles.environmentRow,
-      items: items.slice(3, 6),
+      items: selectItems([
+        'personal-military-radio',
+        'personal-fire-place',
+        'personal-sci-fi-corridor',
+      ]),
+    },
+    {
+      className: styles.studyFeatureRow,
+      items: selectItems([
+        'personal-zbrush-rock-environment-practice',
+        'personal-zbrush-study',
+      ]),
     },
   ].filter((row) => row.items.length > 0);
 

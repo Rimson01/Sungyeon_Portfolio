@@ -124,6 +124,11 @@
   gap: 4px;
 }
 
+.featuredRow {
+  grid-template-columns: minmax(0, 1fr);
+  height: clamp(440px, 38vw, 640px);
+}
+
 .environmentRow {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   height: clamp(330px, 23vw, 410px);
@@ -207,7 +212,16 @@
 }
 
 @media (max-width: 960px) {
-  .environmentRow,
+  .featuredRow {
+    height: clamp(360px, 54vw, 520px);
+  }
+
+  .environmentRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: clamp(260px, 34vw, 360px);
+    height: auto;
+  }
+
   .studyFeatureRow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     height: clamp(280px, 38vw, 380px);
@@ -218,7 +232,7 @@
     height: clamp(280px, 38vw, 380px);
   }
 
-  .environmentRow > :first-child {
+  .environmentRow > :last-child:nth-child(odd) {
     grid-column: span 2;
   }
 
@@ -275,6 +289,10 @@
   .archiveRow {
     grid-template-columns: 1fr;
     height: auto;
+  }
+
+  .environmentRow > :last-child:nth-child(odd) {
+    grid-column: auto;
   }
 
   .archiveRow > * {
