@@ -38,7 +38,7 @@ export default function AllPortfolioGrid({ items }: AllPortfolioGridProps) {
         key: 'substanceDesigner',
         title: 'Substance Designer',
         label: 'Procedural Material Studies',
-        description: 'Fabric, tile, and ornament materials created with procedural workflows.',
+        description: 'Leather, wood, metal, and rock materials created with procedural workflows.',
         items: publishedItems.filter((item) => item.archiveGroup === 'substanceDesigner'),
       },
       {
@@ -106,19 +106,15 @@ function SubstanceImageGrid({
   items: PortfolioItem[];
   onSelect: (item: PortfolioItem, mediaId: string) => void;
 }) {
-  const entries = items.flatMap((item) =>
-    item.media
-      .filter((media) => media.type === 'image' && media.lightboxEnabled)
-      .map((media) => ({ item, media })),
-  );
+  const entries = getSubstanceDisplayEntries(items);
 
   return (
     <div className={`${styles.curatedGrid} ${styles.substanceGrid}`}>
-      {entries.map(({ item, media }) => {
+      {entries.map(({ item, media, title }) => {
         const displayItem: PortfolioItem = {
           ...item,
           id: `${item.id}-${media.id}`,
-          title: media.displayLabel ?? media.title,
+          title,
           thumbnailUrl: media.thumbnailUrl ?? media.url ?? item.thumbnailUrl,
         };
 
@@ -135,17 +131,40 @@ function SubstanceImageGrid({
   );
 }
 
+function getSubstanceDisplayEntries(items: PortfolioItem[]) {
+  const displayOrder = [
+    { sourceLabel: 'Fabric 01', displayTitle: 'Fabric' },
+    { sourceLabel: 'Tile 01', displayTitle: 'Tile 01' },
+    { sourceLabel: 'Tile 02', displayTitle: 'Tile 02' },
+    { sourceLabel: 'Tile 03', displayTitle: 'Tile 03' },
+    { sourceLabel: 'Tile 04', displayTitle: 'Tile 04' },
+    { sourceLabel: 'Ornament 01', displayTitle: 'Ornament' },
+    { sourceLabel: 'Leather Tufted', displayTitle: 'Leather Tufted' },
+    { sourceLabel: 'Wooden Planks', displayTitle: 'Wooden Planks' },
+    { sourceLabel: 'Spiked Metal', displayTitle: 'Spiked Metal' },
+    { sourceLabel: 'Rock 01', displayTitle: 'Rock Study' },
+  ];
+  const imageEntries = items.flatMap((item) =>
+    item.media
+      .filter((media) => media.type === 'image' && media.lightboxEnabled)
+      .map((media) => ({ item, media })),
+  );
+
+  return displayOrder.flatMap(({ sourceLabel, displayTitle }) => {
+    const entry = imageEntries.find(
+      ({ media }) => (media.displayLabel ?? media.title) === sourceLabel,
+    );
+
+    return entry ? [{ ...entry, title: displayTitle }] : [];
+  });
+}
+
 function EditorialHeader({ section }: { section: ArchiveSection }) {
   const titleWords = section.title.split(' ');
   const accentWord = titleWords.pop();
   const itemCount =
     section.key === 'substanceDesigner'
-      ? section.items.reduce(
-          (count, item) =>
-            count +
-            item.media.filter((media) => media.type === 'image' && media.lightboxEnabled).length,
-          0,
-        )
+      ? getSubstanceDisplayEntries(section.items).length
       : section.items.length;
 
   return (

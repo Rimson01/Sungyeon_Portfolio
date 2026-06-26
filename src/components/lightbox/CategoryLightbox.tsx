@@ -34,15 +34,8 @@ export default function CategoryLightbox() {
   const mediaItems = useMemo(() => {
     if (!activeItem) return [];
 
-    if (activeItem.archiveGroup === 'substanceDesigner') {
-      return categoryItems
-        .filter((item) => item.archiveGroup === 'substanceDesigner')
-        .sort((a, b) => a.categoryOrder - b.categoryOrder)
-        .flatMap((item) => item.media.filter((media) => media.lightboxEnabled));
-    }
-
     return activeItem.media.filter((media) => media.lightboxEnabled);
-  }, [activeItem, categoryItems]);
+  }, [activeItem]);
   const selectedMedia = mediaItems[selectedMediaIndex];
 
   useEffect(() => {

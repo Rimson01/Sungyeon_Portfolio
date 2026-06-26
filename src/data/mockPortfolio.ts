@@ -319,40 +319,104 @@ const zbrushStudyMedia = (() => {
   );
 })();
 
-function createMaterialStudyMedia(
-  projectId: string,
-  title: string,
-  images: (typeof importedWixPortfolioBatch)[number]['images'],
-) {
-  return images.map((image, index) => ({
-    id: `${projectId}-${image.id}`,
-    type: 'image' as const,
-    url: image.highResolutionUrl,
-    thumbnailUrl: image.highResolutionUrl,
-    title: `${title} ${String(index + 1).padStart(2, '0')}`,
-    alt: title,
-    displayLabel: `${title} ${String(index + 1).padStart(2, '0')}`,
-    order: index + 1,
-    isCountable: true,
-    lightboxEnabled: true,
-  }));
+const publicAssetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
+const substanceDesignerAssets = {
+  leatherTufted: publicAssetUrl('portfolio/substance-designer/leather-tufted.png'),
+  woodenPlanks: publicAssetUrl('portfolio/substance-designer/wooden-planks.png'),
+  spikedMetal: publicAssetUrl('portfolio/substance-designer/spiked-metal.png'),
+  rockStudy01: publicAssetUrl('portfolio/substance-designer/rock-study-01.png'),
+  rockStudy02: publicAssetUrl('portfolio/substance-designer/rock-study-02.png'),
+  rockStudy03: publicAssetUrl('portfolio/substance-designer/rock-study-03.png'),
+};
+
+function createSubstanceMedia(projectId: string, labels: string[], urls: string[]) {
+  return urls.map((url, index) => {
+    const label = labels[index];
+
+    return {
+      id: `${projectId}-${String(index + 1).padStart(2, '0')}`,
+      type: 'image' as const,
+      url,
+      thumbnailUrl: url,
+      title: label,
+      alt: label,
+      displayLabel: label,
+      order: index + 1,
+      isCountable: true,
+      lightboxEnabled: true,
+    };
+  });
 }
 
-const fabricStudyMedia = createMaterialStudyMedia(
-  'fabric-study',
-  'Fabric',
-  materialStudyImport.images.slice(0, 3),
+function createImportedMaterialStudyMedia(
+  projectId: string,
+  labels: string[],
+  images: (typeof importedWixPortfolioBatch)[number]['images'],
+) {
+  return images.map((image, index) => {
+    const label = labels[index];
+
+    return {
+      id: `${projectId}-${image.id}`,
+      type: 'image' as const,
+      url: image.highResolutionUrl,
+      thumbnailUrl: image.highResolutionUrl,
+      title: label,
+      alt: label,
+      displayLabel: label,
+      order: index + 1,
+      isCountable: true,
+      lightboxEnabled: true,
+    };
+  });
+}
+
+const importedMaterialStudyMedia = createImportedMaterialStudyMedia(
+  'imported-material-study',
+  [
+    'Fabric 01',
+    'Fabric 02',
+    'Fabric 03',
+    'Tile 01',
+    'Tile 02',
+    'Tile 03',
+    'Tile 04',
+    'Ornament 01',
+  ],
+  materialStudyImport.images.slice(0, 8),
 );
-const tileStudyMedia = createMaterialStudyMedia(
-  'tile-study',
-  'Tile',
-  materialStudyImport.images.slice(3, 7),
+
+const leatherTuftedMedia = createSubstanceMedia(
+  'leather-tufted',
+  ['Leather Tufted', 'Wooden Planks', 'Spiked Metal'],
+  [
+    substanceDesignerAssets.leatherTufted,
+    substanceDesignerAssets.woodenPlanks,
+    substanceDesignerAssets.spikedMetal,
+  ],
 );
-const ornamentStudyMedia = createMaterialStudyMedia(
-  'ornament-study',
-  'Ornament',
-  materialStudyImport.images.slice(7, 8),
+
+const rockStudyMaterialMedia = createSubstanceMedia(
+  'rock-study-material',
+  ['Rock 01', 'Rock 02', 'Rock 03'],
+  [
+    substanceDesignerAssets.rockStudy01,
+    substanceDesignerAssets.rockStudy02,
+    substanceDesignerAssets.rockStudy03,
+  ],
 );
+
+const fabricStudyMedia = [
+  ...importedMaterialStudyMedia,
+  ...leatherTuftedMedia,
+  ...rockStudyMaterialMedia,
+].map((media, index) => ({
+  ...media,
+  order: index + 1,
+}));
+const tileStudyMedia: typeof leatherTuftedMedia = [];
+const ornamentStudyMedia: typeof leatherTuftedMedia = [];
 
 const militaryRadioMedia = [
   ...(importedWixMilitaryRadio.video
@@ -402,17 +466,15 @@ const militaryRadioMedia = [
   })),
 ];
 
-const publicAssetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}`;
-
 const oldCarriageImageFiles = [
-  'carriage-render-01.png',
+  'carriage-render-05.png',
   'carriage-render-03.png',
   'carriage-render-04.png',
-  'carriage-render-05.png',
+  'carriage-render-01.png',
   'carriage-render-06.png',
   'carriage-render-07.png',
-  'carriage-render-08.png',
   'carriage-render-09.png',
+  'carriage-render-08.png',
   'carriage-render-10.png',
   'carriage-render-11.png',
 ];
@@ -437,7 +499,8 @@ const oldCarriageImageMedia = oldCarriageImageFiles.map((fileName, index) => {
   };
 });
 
-const oldCarriageYoutubeId = 'PleCKCOQFsw';
+const oldCarriageYoutubeId = 'p1OT3rYb4hs';
+const oldCarriageTextureMapsUrl = publicAssetUrl('portfolio/old-carriage/carriage-texture-maps.jpg');
 const oldCarriageMedia = [
   {
     id: 'old-carriage-youtube-01',
@@ -455,6 +518,18 @@ const oldCarriageMedia = [
     ...media,
     order: index + 2,
   })),
+  {
+    id: 'old-carriage-texture-maps',
+    type: 'image' as const,
+    url: oldCarriageTextureMapsUrl,
+    thumbnailUrl: oldCarriageTextureMapsUrl,
+    title: 'Texture Maps',
+    alt: 'Old Carriage Texture Maps',
+    displayLabel: 'Texture Maps',
+    order: oldCarriageImageMedia.length + 2,
+    isCountable: true,
+    lightboxEnabled: true,
+  },
 ];
 
 export const mockCompanies: Company[] = [
@@ -879,9 +954,9 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
   },
   {
     id: 'personal-material-fabric',
-    title: 'Fabric',
+    title: 'Substance Designer',
     subtitle: 'Substance Designer',
-    slug: 'material-fabric',
+    slug: 'substance-designer-study',
     category: 'PERSONAL',
     personalSubcategory: 'Study',
     archiveGroup: 'substanceDesigner',
@@ -899,7 +974,7 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     isPublished: true,
     isFeatured: false,
     thumbnailUrl: materialStudyImport.images[0].highResolutionUrl,
-    hoverUrl: materialStudyImport.images[1]?.highResolutionUrl,
+    hoverUrl: substanceDesignerAssets.leatherTufted,
     mediaType: 'image',
     order: 6,
     allOrder: 8,
@@ -917,9 +992,9 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
   },
   {
     id: 'personal-material-tile',
-    title: 'Tile',
+    title: 'Rock Study',
     subtitle: 'Substance Designer',
-    slug: 'material-tile',
+    slug: 'material-rock-study',
     category: 'PERSONAL',
     personalSubcategory: 'Study',
     archiveGroup: 'substanceDesigner',
@@ -934,10 +1009,10 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     year: 2025,
     publishedAt: '2025-10-31',
     uploadedAt: '2025-10-31',
-    isPublished: true,
+    isPublished: false,
     isFeatured: false,
-    thumbnailUrl: materialStudyImport.images[3].highResolutionUrl,
-    hoverUrl: materialStudyImport.images[4]?.highResolutionUrl,
+    thumbnailUrl: substanceDesignerAssets.rockStudy01,
+    hoverUrl: substanceDesignerAssets.rockStudy02,
     mediaType: 'image',
     order: 7,
     allOrder: 9,
@@ -972,7 +1047,7 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     year: 2025,
     publishedAt: '2025-10-31',
     uploadedAt: '2025-10-31',
-    isPublished: true,
+    isPublished: false,
     isFeatured: false,
     thumbnailUrl: materialStudyImport.images[7].highResolutionUrl,
     mediaType: 'image',
