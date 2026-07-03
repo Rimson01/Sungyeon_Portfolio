@@ -461,16 +461,16 @@ const militaryRadioMedia = [
 ];
 
 const oldCarriageImageFiles = [
-  'carriage-render-05.png',
-  'carriage-render-03.png',
-  'carriage-render-04.png',
-  'carriage-render-01.png',
-  'carriage-render-06.png',
-  'carriage-render-07.png',
-  'carriage-render-09.png',
-  'carriage-render-08.png',
-  'carriage-render-10.png',
-  'carriage-render-11.png',
+  'carriage-render-01.jpg',
+  'carriage-render-02.jpg',
+  'carriage-render-03.jpg',
+  'carriage-render-04.jpg',
+  'carriage-render-05.jpg',
+  'carriage-render-06.jpg',
+  'carriage-render-07.jpg',
+  'carriage-render-08.jpg',
+  'carriage-render-09.jpg',
+  'carriage-render-10.jpg',
 ];
 
 const oldCarriageImageMedia = oldCarriageImageFiles.map((fileName, index) => {
@@ -495,6 +495,7 @@ const oldCarriageImageMedia = oldCarriageImageFiles.map((fileName, index) => {
 
 const oldCarriageYoutubeId = 'p1OT3rYb4hs';
 const oldCarriageTextureMapsUrl = publicAssetUrl('portfolio/old-carriage/carriage-texture-maps.jpg');
+const oldCarriageWorkImageUrl = publicAssetUrl('portfolio/old-carriage/work-image.gif');
 const oldCarriageMedia = [
   {
     id: 'old-carriage-youtube-01',
@@ -521,6 +522,18 @@ const oldCarriageMedia = [
     alt: 'Old Carriage Texture Maps',
     displayLabel: 'Texture Maps',
     order: oldCarriageImageMedia.length + 2,
+    isCountable: true,
+    lightboxEnabled: true,
+  },
+  {
+    id: 'old-carriage-work-process',
+    type: 'image' as const,
+    url: oldCarriageWorkImageUrl,
+    thumbnailUrl: oldCarriageWorkImageUrl,
+    title: 'Work Process',
+    alt: 'Old Carriage Work Process',
+    displayLabel: 'Work Process',
+    order: oldCarriageImageMedia.length + 3,
     isCountable: true,
     lightboxEnabled: true,
   },
