@@ -322,12 +322,20 @@ const zbrushStudyMedia = (() => {
 const publicAssetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
 const substanceDesignerAssets = {
-  leatherTufted: publicAssetUrl('portfolio/substance-designer/leather-tufted.png'),
-  woodenPlanks: publicAssetUrl('portfolio/substance-designer/wooden-planks.png'),
-  spikedMetal: publicAssetUrl('portfolio/substance-designer/spiked-metal.png'),
-  rockStudy01: publicAssetUrl('portfolio/substance-designer/rock-study-01.png'),
-  rockStudy02: publicAssetUrl('portfolio/substance-designer/rock-study-02.png'),
-  rockStudy03: publicAssetUrl('portfolio/substance-designer/rock-study-03.png'),
+  fabric01: publicAssetUrl('portfolio/substance-designer/fabric-01.jpg'),
+  fabric02: publicAssetUrl('portfolio/substance-designer/fabric-02.jpg'),
+  fabric03: publicAssetUrl('portfolio/substance-designer/fabric-03.jpg'),
+  tile01: publicAssetUrl('portfolio/substance-designer/tile-01.jpg'),
+  tile02: publicAssetUrl('portfolio/substance-designer/tile-02.jpg'),
+  tile03: publicAssetUrl('portfolio/substance-designer/tile-03.jpg'),
+  tile04: publicAssetUrl('portfolio/substance-designer/tile-04.jpg'),
+  ornament01: publicAssetUrl('portfolio/substance-designer/ornament-01.jpg'),
+  leatherTufted: publicAssetUrl('portfolio/substance-designer/leather-tufted.jpg'),
+  woodenPlanks: publicAssetUrl('portfolio/substance-designer/wooden-planks.jpg'),
+  spikedMetal: publicAssetUrl('portfolio/substance-designer/spiked-metal.jpg'),
+  rockStudy01: publicAssetUrl('portfolio/substance-designer/rock-study-01.jpg'),
+  rockStudy02: publicAssetUrl('portfolio/substance-designer/rock-study-02.jpg'),
+  rockStudy03: publicAssetUrl('portfolio/substance-designer/rock-study-03.jpg'),
 };
 
 function createSubstanceMedia(projectId: string, labels: string[], urls: string[]) {
@@ -349,30 +357,7 @@ function createSubstanceMedia(projectId: string, labels: string[], urls: string[
   });
 }
 
-function createImportedMaterialStudyMedia(
-  projectId: string,
-  labels: string[],
-  images: (typeof importedWixPortfolioBatch)[number]['images'],
-) {
-  return images.map((image, index) => {
-    const label = labels[index];
-
-    return {
-      id: `${projectId}-${image.id}`,
-      type: 'image' as const,
-      url: image.highResolutionUrl,
-      thumbnailUrl: image.highResolutionUrl,
-      title: label,
-      alt: label,
-      displayLabel: label,
-      order: index + 1,
-      isCountable: true,
-      lightboxEnabled: true,
-    };
-  });
-}
-
-const importedMaterialStudyMedia = createImportedMaterialStudyMedia(
+const importedMaterialStudyMedia = createSubstanceMedia(
   'imported-material-study',
   [
     'Fabric 01',
@@ -384,7 +369,16 @@ const importedMaterialStudyMedia = createImportedMaterialStudyMedia(
     'Tile 04',
     'Ornament 01',
   ],
-  materialStudyImport.images.slice(0, 8),
+  [
+    substanceDesignerAssets.fabric01,
+    substanceDesignerAssets.fabric02,
+    substanceDesignerAssets.fabric03,
+    substanceDesignerAssets.tile01,
+    substanceDesignerAssets.tile02,
+    substanceDesignerAssets.tile03,
+    substanceDesignerAssets.tile04,
+    substanceDesignerAssets.ornament01,
+  ],
 );
 
 const leatherTuftedMedia = createSubstanceMedia(
@@ -973,7 +967,7 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     uploadedAt: '2025-10-31',
     isPublished: true,
     isFeatured: false,
-    thumbnailUrl: materialStudyImport.images[0].highResolutionUrl,
+    thumbnailUrl: substanceDesignerAssets.fabric01,
     hoverUrl: substanceDesignerAssets.leatherTufted,
     mediaType: 'image',
     order: 6,
@@ -1049,7 +1043,7 @@ Maya를 활용한 캐릭터 모델링 프로젝트.
     uploadedAt: '2025-10-31',
     isPublished: false,
     isFeatured: false,
-    thumbnailUrl: materialStudyImport.images[7].highResolutionUrl,
+    thumbnailUrl: substanceDesignerAssets.ornament01,
     mediaType: 'image',
     order: 8,
     allOrder: 10,
