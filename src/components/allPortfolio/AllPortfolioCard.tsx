@@ -39,6 +39,7 @@ function getImageClassName(itemId: string) {
   if (itemId === 'personal-fire-place') return 'firePlaceImage';
   if (itemId === 'personal-sci-fi-corridor') return 'sciFiCorridorImage';
   if (itemId === 'personal-old-carriage') return 'oldCarriageImage';
+  if (itemId === 'personal-battle-axe') return 'battleAxeImage';
   if (itemId === 'personal-zbrush-rock-environment-practice') return 'rockSceneImage';
   if (itemId === 'personal-zbrush-study') return 'zbrushStudyImage';
   if (itemId.startsWith('personal-material-')) return 'materialStudyImage';

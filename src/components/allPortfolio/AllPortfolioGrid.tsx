@@ -189,43 +189,36 @@ interface EnvironmentStudyRowsProps {
   onSelect: (item: PortfolioItem) => void;
 }
 
-function EnvironmentStudyRows({ items, onSelect }: EnvironmentStudyRowsProps) {
-  const itemsById = new Map(items.map((item) => [item.id, item]));
-  const selectItems = (itemIds: string[]) =>
-    itemIds
-      .map((itemId) => itemsById.get(itemId))
-      .filter((item): item is PortfolioItem => Boolean(item));
+const fixedEnvironmentLeadItemId = 'personal-old-carriage';
 
-  const rows = [
-    {
-      className: styles.featuredRow,
-      items: selectItems(['personal-old-carriage']),
-    },
-    {
-      className: styles.environmentRow,
-      items: selectItems([
-        'personal-military-radio',
-        'personal-fire-place',
-        'personal-sci-fi-corridor',
-      ]),
-    },
-    {
-      className: styles.studyFeatureRow,
-      items: selectItems([
-        'personal-zbrush-rock-environment-practice',
-        'personal-zbrush-study',
-      ]),
-    },
-  ].filter((row) => row.items.length > 0);
+function getSortableDateValue(item: PortfolioItem) {
+  const normalizedDate = item.publishedAt.replace(/\./g, '-');
+  const [year = '0', month = '1', day = '1'] = normalizedDate.split('-');
+  const timestamp = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+  ).getTime();
+
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function sortEnvironmentStudyItems(items: PortfolioItem[]) {
+  return [...items].sort((current, next) => {
+    if (current.id === fixedEnvironmentLeadItemId) return -1;
+    if (next.id === fixedEnvironmentLeadItemId) return 1;
+
+    return getSortableDateValue(next) - getSortableDateValue(current);
+  });
+}
+
+function EnvironmentStudyRows({ items, onSelect }: EnvironmentStudyRowsProps) {
+  const sortedItems = sortEnvironmentStudyItems(items);
 
   return (
     <div className={styles.environmentStudy}>
-      {rows.map((row, rowIndex) => (
-        <div key={rowIndex} className={`${styles.archiveRow} ${row.className}`}>
-          {row.items.map((item) => (
-            <AllPortfolioCard key={item.id} item={item} onSelect={onSelect} />
-          ))}
-        </div>
+      {sortedItems.map((item) => (
+        <AllPortfolioCard key={item.id} item={item} onSelect={onSelect} />
       ))}
     </div>
   );

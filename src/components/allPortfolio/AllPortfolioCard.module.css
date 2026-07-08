@@ -87,6 +87,11 @@
   object-position: center 56%;
 }
 
+.battleAxeImage {
+  object-fit: contain;
+  object-position: center 50%;
+}
+
 .rockSceneImage {
   object-position: center 48%;
 }

@@ -463,7 +463,7 @@ function MediaPreview({
                 }
               }}
             >
-              <span>Scroll media · Click for video controls</span>
+              <span>Scroll media / Click for video controls</span>
             </div>
           ) : null}
         </div>
@@ -494,7 +494,7 @@ function MediaPreview({
 function ProjectFacts({ item }: { item: PortfolioItem }) {
   const period = item.stats.find((stat) => stat.key === 'Period')?.value;
   const tools =
-    item.tools.length > 0 ? item.tools.map(formatToolName).join(' · ') : undefined;
+    item.tools.length > 0 ? item.tools.map(formatToolName).join(' / ') : undefined;
 
   if (!period && !tools) return null;
 
