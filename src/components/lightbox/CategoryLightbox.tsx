@@ -284,7 +284,9 @@ function resolveMediaThumbnailCandidates(media: PortfolioMedia | undefined, item
     return mediaWithSrc.youtubeId ? [resolveYoutubeThumbnailUrl(mediaWithSrc.youtubeId)] : [];
   }
 
-  return [resolveMediaImageUrl(media, item)].filter((url): url is string => Boolean(url));
+  return Array.from(
+    new Set([mediaWithSrc?.thumbnailUrl, resolveMediaImageUrl(media, item)]),
+  ).filter((url): url is string => Boolean(url));
 }
 
 function isValidYoutubeId(youtubeId: string | undefined): youtubeId is string {
