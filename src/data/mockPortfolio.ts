@@ -541,7 +541,7 @@ const oldCarriageMedia = [
 
 const battleAxeAssets = {
   detail: publicAssetUrl('portfolio/battle-axe/axe-detail-01.jpg'),
-  render01: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render.jpg'),
+  render01: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-01.jpg'),
   render01Thumb: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-thumb.jpg'),
   render02: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-02.jpg'),
   render02Thumb: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-02-thumb.jpg'),
