@@ -541,10 +541,10 @@ const oldCarriageMedia = [
 
 const battleAxeAssets = {
   detail: publicAssetUrl('portfolio/battle-axe/axe-detail-01.jpg'),
-  render01: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-01.jpg?v=20260717-render01'),
-  render01Thumb: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-thumb.jpg'),
-  render02: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-02.jpg'),
-  render02Thumb: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-02-thumb.jpg'),
+  render01: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-01.jpg?v=20260723-render01'),
+  render01Thumb: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-thumb.jpg?v=20260723-render01'),
+  render02: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-02.jpg?v=20260723-render02'),
+  render02Thumb: publicAssetUrl('portfolio/battle-axe/battle-axe-marmoset-render-02-thumb.jpg?v=20260723-render02'),
   turntable: publicAssetUrl('portfolio/battle-axe/battle-axe-turntable.gif'),
   texture: publicAssetUrl('portfolio/battle-axe/axe-texture.jpg'),
   workProcess: publicAssetUrl('portfolio/battle-axe/axe-workprocess.jpg'),
